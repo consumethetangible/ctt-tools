@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nine Circles Second Circle Header Creator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            padding: 40px 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+        }
+        .container { max-width: 1000px; width: 100%; }
+        h1 {
+            text-align: center; margin-bottom: 10px; font-weight: 700;
+            letter-spacing: 3px; font-size: 28px; text-transform: uppercase;
+            color: #fff; text-shadow: 0 0 20px rgba(255,0,0,0.5);
+        }
+        .subtitle {
+            text-align: center; margin-bottom: 30px; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 2px; color: #888;
+        }
+        .input-section {
+            background: #151515; padding: 30px; border-radius: 8px;
+            margin-bottom: 30px; border: 1px solid #333;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .input-group { margin-bottom: 0; }
+        label {
+            display: block; margin-bottom: 8px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1.5px; color: #999; font-weight: 600;
+        }
+        input[type="file"] {
+            width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #444;
+            border-radius: 4px; color: #fff; font-size: 14px; box-sizing: border-box;
+            transition: border-color 0.3s; cursor: pointer;
+        }
+        input[type="file"]:hover { border-color: #666; }
+        .button-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        button {
+            padding: 12px 24px; border: 1px solid #555; border-radius: 4px;
+            background: #222; color: #fff; font-size: 13px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+            transition: all 0.2s; flex: 1; min-width: 120px;
+        }
+        button:hover { background: #333; border-color: #888; }
+        button.primary { background: #1a1a2e; border-color: #107AB8; color: #4EAEE5; }
+        button.primary:hover { background: #107AB8; color: #fff; }
+        .status {
+            text-align: center; padding: 10px; font-size: 12px; letter-spacing: 2px;
+            text-transform: uppercase; color: #555; margin-bottom: 10px; min-height: 30px;
+        }
+        .status.active { color: #107AB8; animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .canvas-container {
+            background: #000; border: 1px solid #222; border-radius: 4px;
+            overflow: hidden; display: flex; justify-content: center;
+        }
+        canvas { display: block; max-width: 100%; height: auto; }
+        .info {
+            text-align: center; margin-top: 15px; font-size: 11px;
+            color: #444; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .preview-strip { display: flex; gap: 8px; margin-bottom: 10px; }
+        .preview-thumb {
+            width: 60px; height: 60px; background: #111; border: 1px solid #333;
+            border-radius: 4px; object-fit: cover; display: none;
+        }
+        .advanced-toggle-row { display: flex; justify-content: flex-end; margin-top: 14px; }
+        .link-btn {
+            background: none; border: none; color: #666; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer;
+            flex: none; padding: 6px 0; text-decoration: underline;
+        }
+        .link-btn:hover { color: #4EAEE5; background: none; }
+        .advanced-panel {
+            display: none; margin-top: 20px; padding-top: 20px;
+            border-top: 1px solid #262626;
+        }
+        .advanced-panel.open { display: block; }
+        .advanced-panel h3 {
+            margin: 0 0 14px; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 2px; color: #666; font-weight: 600;
+        }
+        .slider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+        .slider-row { display: flex; flex-direction: column; gap: 4px; }
+        .slider-label {
+            display: flex; justify-content: space-between; font-size: 11px;
+            color: #999; letter-spacing: 0.5px; text-transform: none; font-weight: 400;
+        }
+        .slider-label span:last-child { color: #4EAEE5; font-weight: 700; }
+        input[type="range"] { width: 100%; accent-color: #107AB8; }
+        .advanced-panel .button-group { margin-top: 18px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Second Circle</h1>
+        <div class="subtitle">Header Creator — Nine Circles</div>
+
+        <div class="input-section">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Album 1 (Left)</label>
+                    <input type="file" id="album1" accept="image/*" onchange="previewImage(this,'prev1')">
+                    <img class="preview-thumb" id="prev1">
+                </div>
+                <div class="input-group">
+                    <label>Album 2 (Right)</label>
+                    <input type="file" id="album2" accept="image/*" onchange="previewImage(this,'prev2')">
+                    <img class="preview-thumb" id="prev2">
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="primary" onclick="generateHeader()">Generate Header</button>
+                <button onclick="regenerate()">Regenerate Void</button>
+                <button onclick="swapImages()">Swap Albums</button>
+                <button onclick="clearAll()">Clear</button>
+            </div>
+            <div class="button-group">
+                <button class="primary" onclick="downloadSquare()">Download Square (1000×1000)</button>
+                <button class="primary" onclick="downloadRect()">Download 3:2 (1000×667)</button>
+            </div>
+
+            <div class="advanced-toggle-row">
+                <button class="link-btn" id="advToggleBtn" onclick="toggleAdvanced()">Customize Void Parameters</button>
+            </div>
+            <div class="advanced-panel" id="advancedPanel">
+                <h3>Void Parameters</h3>
+                <div class="slider-grid">
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Gap size</span><span id="v-gap">4</span></div>
+                        <input type="range" id="p-gap" min="4" max="30" value="4" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Tendril density</span><span id="v-density">2.2×</span></div>
+                        <input type="range" id="p-density" min="0.2" max="2.5" step="0.1" value="2.2" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Tendril length</span><span id="v-length">1.0×</span></div>
+                        <input type="range" id="p-length" min="0.3" max="2.5" step="0.1" value="1.0" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Tendril thickness</span><span id="v-thickness">1.7×</span></div>
+                        <input type="range" id="p-thickness" min="0.2" max="2.5" step="0.1" value="1.7" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Branchiness</span><span id="v-branch">0.9×</span></div>
+                        <input type="range" id="p-branch" min="0" max="2.5" step="0.1" value="0.9" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Ooze blob size</span><span id="v-ooze">1.5×</span></div>
+                        <input type="range" id="p-ooze" min="0.3" max="2.5" step="0.1" value="1.5" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Wispiness (curl + thinness)</span><span id="v-wispy">0.80</span></div>
+                        <input type="range" id="p-wispy" min="0" max="1" step="0.05" value="0.80" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Smoke opacity</span><span id="v-opacity">1.00</span></div>
+                        <input type="range" id="p-opacity" min="0.2" max="1" step="0.05" value="1.00" oninput="onParamChange()">
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><span>Softness (blur)</span><span id="v-blur">2.5px</span></div>
+                        <input type="range" id="p-blur" min="0" max="8" step="0.5" value="2.5" oninput="onParamChange()">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="resetDefaults()">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="status" id="status"></div>
+        <div class="canvas-container">
+            <canvas id="c" width="1000" height="1000"></canvas>
+        </div>
+        <div class="info">1000 × 1000px · Click "Regenerate Void" for a new tendril pattern</div>
+    </div>
+
+<script src="void-engine.js"></script>
+<script>
+// ── TUNED DEFAULTS (from the Void Engine Lab session) ─────────────────────────
+const VOID_DEFAULTS = {
+    gap: 4,
+    density: 2.2,
+    length: 1.0,
+    thickness: 1.7,
+    branch: 0.9,
+    ooze: 1.5,
+    wispy: 0.80,
+    opacity: 1.00,
+    blur: 2.5
+};
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+let img1 = null, img2 = null;
+let currentSeed = null;
+
+ctx.fillStyle = '#000';
+ctx.fillRect(0, 0, 1000, 1000);
+
+// ── ADVANCED PANEL ─────────────────────────────────────────────────────────────
+function toggleAdvanced() {
+    const panel = document.getElementById('advancedPanel');
+    const open = panel.classList.toggle('open');
+    document.getElementById('advToggleBtn').textContent =
+        open ? 'Hide Void Parameters' : 'Customize Void Parameters';
+}
+
+function getParams() {
+    return {
+        gap: +document.getElementById('p-gap').value,
+        density: +document.getElementById('p-density').value,
+        length: +document.getElementById('p-length').value,
+        thickness: +document.getElementById('p-thickness').value,
+        branch: +document.getElementById('p-branch').value,
+        ooze: +document.getElementById('p-ooze').value,
+        wispy: +document.getElementById('p-wispy').value,
+        opacity: +document.getElementById('p-opacity').value,
+        blur: +document.getElementById('p-blur').value
+    };
+}
+
+function onParamChange() {
+    const p = getParams();
+    document.getElementById('v-gap').textContent = p.gap;
+    document.getElementById('v-density').textContent = p.density.toFixed(1) + '×';
+    document.getElementById('v-length').textContent = p.length.toFixed(1) + '×';
+    document.getElementById('v-thickness').textContent = p.thickness.toFixed(1) + '×';
+    document.getElementById('v-branch').textContent = p.branch.toFixed(1) + '×';
+    document.getElementById('v-ooze').textContent = p.ooze.toFixed(1) + '×';
+    document.getElementById('v-wispy').textContent = p.wispy.toFixed(2);
+    document.getElementById('v-opacity').textContent = p.opacity.toFixed(2);
+    document.getElementById('v-blur').textContent = p.blur.toFixed(1) + 'px';
+    if (img1 && img2 && currentSeed) drawHeader(currentSeed);
+}
+
+function resetDefaults() {
+    document.getElementById('p-gap').value = VOID_DEFAULTS.gap;
+    document.getElementById('p-density').value = VOID_DEFAULTS.density;
+    document.getElementById('p-length').value = VOID_DEFAULTS.length;
+    document.getElementById('p-thickness').value = VOID_DEFAULTS.thickness;
+    document.getElementById('p-branch').value = VOID_DEFAULTS.branch;
+    document.getElementById('p-ooze').value = VOID_DEFAULTS.ooze;
+    document.getElementById('p-wispy').value = VOID_DEFAULTS.wispy;
+    document.getElementById('p-opacity').value = VOID_DEFAULTS.opacity;
+    document.getElementById('p-blur').value = VOID_DEFAULTS.blur;
+    onParamChange();
+}
+
+// ── LAYOUT (2-across header) ───────────────────────────────────────────────────
+function headerLayout(GAP) {
+    const SZ = 460;
+    const SX = Math.floor((1000 - (SZ*2+GAP)) / 2);
+    const SY = Math.floor((1000 - SZ) / 2);
+    const EX = SX + SZ*2 + GAP;
+    const EY = SY + SZ;
+    const MX = SX + SZ + Math.floor(GAP/2);
+    return { SZ, GAP, SX, SY, EX, EY, MX };
+}
+
+// ── DRAW ───────────────────────────────────────────────────────────────────────
+function drawHeader(seed) {
+    const rng = makeRng(seed);
+    const cfg = getParams();
+    const L = headerLayout(cfg.gap);
+    const oc = document.createElement('canvas');
+    oc.width = oc.height = 1000;
+    const od = oc.getContext('2d');
+    od.fillStyle = '#000';
+
+    od.fillRect(0, 0, 1000, L.SY);
+    od.fillRect(0, L.EY, 1000, 1000-L.EY);
+    od.fillRect(0, L.SY, L.SX, L.SZ);
+    od.fillRect(L.EX, L.SY, 1000-L.EX, L.SZ);
+    od.fillRect(L.SX+L.SZ, L.SY, L.GAP, L.SZ);
+
+    oozeEdge(od,rng,cfg, L.SX,L.SY, L.EX,L.SY, 30, 8,28, 0);
+    oozeEdge(od,rng,cfg, L.SX,L.EY, L.EX,L.EY, 30, 8,28, 0);
+    oozeEdge(od,rng,cfg, L.SX,L.SY, L.SX,L.EY, 22, 7,25, 90);
+    oozeEdge(od,rng,cfg, L.EX,L.SY, L.EX,L.EY, 22, 7,25, 90);
+
+    const nGapFill = Math.max(1, Math.round(14*cfg.density));
+    for (let i = 0; i < nGapFill; i++) {
+        eblob(od, L.MX+(rng()-0.5)*8, L.SY+rng()*(L.EY-L.SY),
+              (3+rng()*4)*cfg.ooze, (6+rng()*10)*cfg.ooze, 90);
+    }
+
+    [[L.SX,L.SY],[L.EX,L.SY],[L.SX,L.EY],[L.EX,L.EY]].forEach(([cx,cy]) => {
+        const r = (18 + rng()*22) * cfg.ooze;
+        const count = Math.max(2, Math.round(6*cfg.density));
+        poolCluster(od, rng, cfg, cx, cy, r, count);
+    });
+
+    spawnEdge(od, rng, cfg, L.SX,L.SY, L.EX,L.SY,  Math.PI/2,   8);
+    spawnEdge(od, rng, cfg, L.SX,L.EY, L.EX,L.EY, -Math.PI/2,   8);
+    spawnEdge(od, rng, cfg, L.SX,L.SY, L.SX,L.EY,  0,            6);
+    spawnEdge(od, rng, cfg, L.EX,L.SY, L.EX,L.EY,  Math.PI,      6);
+
+    [[L.SX,L.SY,Math.PI/4],[L.EX,L.SY,3*Math.PI/4],
+     [L.SX,L.EY,-Math.PI/4],[L.EX,L.EY,-3*Math.PI/4]].forEach(([cx,cy,ba]) => {
+        const n = Math.max(1, Math.round((4+Math.floor(rng()*3))*cfg.density));
+        for (let i = 0; i < n; i++) {
+            const angle  = ba + (rng()-0.5)*1.7;
+            const length = (60 + rng()*200) * cfg.length;
+            const rootR  = (3 + rng()*11) * cfg.thickness;
+            const ox = Math.cos(ba)*(4+rng()*14), oy = Math.sin(ba)*(4+rng()*14);
+            tendril(od, rng, cfg, cx+ox, cy+oy, angle, length, rootR);
+        }
+    });
+
+    gapTendrils(od, rng, cfg, L.SX+L.SZ, L.SX+L.SZ+L.GAP, L.SY, L.EY, true, L.GAP);
+
+    const nSeam = Math.max(1, Math.round(8*cfg.density));
+    for (let i = 0; i < nSeam; i++) {
+        const cx = L.MX + (rng()-0.5)*L.GAP;
+        const cy = L.SY + 10 + rng()*(L.EY-L.SY-20);
+        const angle = (rng()>0.5 ? Math.PI/2 : -Math.PI/2) + (rng()-0.5)*0.6;
+        tendril(od, rng, cfg, cx, cy, angle, (20+rng()*70)*cfg.length, (1+rng()*3)*cfg.thickness, false);
+    }
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 1000, 1000);
+    ctx.drawImage(img1, L.SX, L.SY, L.SZ, L.SZ);
+    ctx.drawImage(img2, L.SX+L.SZ+L.GAP, L.SY, L.SZ, L.SZ);
+    ctx.drawImage(applyBlur(oc, cfg.blur), 0, 0);
+}
+
+// ── UI FUNCTIONS ──────────────────────────────────────────────────────────────
+function setStatus(msg, active=false) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status' + (active ? ' active' : '');
+}
+
+function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.src = e.target.result; preview.style.display='block'; };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function generateHeader() {
+    const f1 = document.getElementById('album1').files[0];
+    const f2 = document.getElementById('album2').files[0];
+    if (!f1 || !f2) { alert('Please select both album images'); return; }
+    setStatus('Manifesting darkness...', true);
+    try {
+        [img1, img2] = await Promise.all([loadImage(f1), loadImage(f2)]);
+        currentSeed = Math.floor(Math.random() * 2**32);
+        drawHeader(currentSeed);
+        setStatus('The void awaits.', false);
+    } catch(e) { alert('Error loading images'); setStatus('', false); }
+}
+
+function regenerate() {
+    if (!img1 || !img2) { alert('Please generate a header first'); return; }
+    setStatus('Reshaping the abyss...', true);
+    setTimeout(() => {
+        currentSeed = Math.floor(Math.random() * 2**32);
+        drawHeader(currentSeed);
+        setStatus('Darkness renewed.', false);
+    }, 50);
+}
+
+function swapImages() {
+    if (!img1 || !img2) { alert('Please generate a header first'); return; }
+    [img1, img2] = [img2, img1];
+    drawHeader(currentSeed);
+    setStatus('Albums swapped.', false);
+}
+
+function clearAll() {
+    img1 = img2 = null; currentSeed = null;
+    document.getElementById('album1').value = '';
+    document.getElementById('album2').value = '';
+    ['prev1','prev2'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.display='none'; el.src='';
+    });
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,1000,1000);
+    setStatus('', false);
+}
+
+function downloadSquare() {
+    if (!img1||!img2) { alert('Please generate a header first'); return; }
+    canvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.download = 'nine-circles-second-circle-square.png';
+        a.href = URL.createObjectURL(blob);
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setStatus('Square image summoned.', false);
+    }, 'image/png');
+}
+
+function downloadRect() {
+    if (!img1||!img2) { alert('Please generate a header first'); return; }
+    const tmp = document.createElement('canvas');
+    tmp.width = 1000; tmp.height = 667;
+    tmp.getContext('2d').drawImage(canvas, 0, (1000-667)/2, 1000, 667, 0, 0, 1000, 667);
+    tmp.toBlob(blob => {
+        const a = document.createElement('a');
+        a.download = 'nine-circles-second-circle-3x2.png';
+        a.href = URL.createObjectURL(blob);
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setStatus('3:2 image summoned.', false);
+    }, 'image/png');
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generateHeader();
+});
+</script>
+</body>
+</html>

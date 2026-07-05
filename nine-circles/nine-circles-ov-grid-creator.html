@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nine Circles Ov Banner Generator</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            padding: 40px 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+        }
+        .container { max-width: 1060px; width: 100%; }
+        h1 {
+            text-align: center; margin-bottom: 10px; font-weight: 700;
+            letter-spacing: 3px; font-size: 28px; text-transform: uppercase;
+            color: #fff; text-shadow: 0 0 20px rgba(255,0,0,0.5);
+        }
+        .subtitle {
+            text-align: center; margin-bottom: 30px; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 2px; color: #888;
+        }
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .slot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: #151515;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .slot {
+            aspect-ratio: 1;
+            background: #0a0a0a;
+            border: 1px dashed #333;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .slot:hover { border-color: #555; }
+        .slot.drag-over { border-color: #107AB8; border-style: solid; background: #1a1a2e; }
+        .slot.dragging { opacity: 0.4; }
+        .slot.has-image { border-style: solid; border-color: #444; cursor: grab; }
+        .slot.has-image:active { cursor: grabbing; }
+        .slot img {
+            width: 100%; height: 100%; object-fit: cover;
+            position: absolute; top: 0; left: 0;
+            pointer-events: none;
+        }
+        .slot-label {
+            font-size: 10px; color: #444; text-transform: uppercase;
+            letter-spacing: 1px; text-align: center; pointer-events: none;
+        }
+        .slot-number {
+            position: absolute; top: 4px; left: 6px;
+            font-size: 10px; color: rgba(255,255,255,0.5);
+            font-weight: 700; letter-spacing: 1px;
+            pointer-events: none; z-index: 2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        .slot-remove {
+            position: absolute; top: 4px; right: 4px;
+            width: 18px; height: 18px;
+            background: rgba(0,0,0,0.7); border: none;
+            border-radius: 50%; color: #aaa; font-size: 12px;
+            cursor: pointer; display: none; align-items: center;
+            justify-content: center; z-index: 3; padding: 0;
+            line-height: 1;
+        }
+        .slot:hover .slot-remove { display: flex; }
+        .slot-remove:hover { background: rgba(180,0,0,0.8); color: #fff; }
+
+        .controls {
+            background: #151515; padding: 20px;
+            border-radius: 8px; border: 1px solid #333;
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .controls h3 {
+            margin: 0; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 2px; color: #666; font-weight: 600;
+        }
+        .upload-zone {
+            border: 1px dashed #444; border-radius: 4px;
+            padding: 16px; text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative;
+        }
+        .upload-zone:hover { border-color: #107AB8; background: #1a1a2e; }
+        .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .upload-zone p { margin: 0; font-size: 12px; color: #666; }
+        .upload-zone strong { display: block; font-size: 13px; color: #aaa; margin-bottom: 4px; }
+        .divider { border: none; border-top: 1px solid #222; margin: 2px 0; }
+        .info-row {
+            font-size: 11px; color: #555; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .count { color: #107AB8; font-weight: 700; }
+
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        button {
+            padding: 12px 20px; border: 1px solid #555; border-radius: 4px;
+            background: #222; color: #fff; font-size: 12px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+            transition: all 0.2s; flex: 1; min-width: 100px;
+        }
+        button:hover { background: #333; border-color: #888; }
+        button.primary { background: #1a1a2e; border-color: #107AB8; color: #4EAEE5; }
+        button.primary:hover { background: #107AB8; color: #fff; }
+        button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .status {
+            text-align: center; padding: 10px; font-size: 12px; letter-spacing: 2px;
+            text-transform: uppercase; color: #555; min-height: 30px; margin-bottom: 10px;
+        }
+        .status.active { color: #107AB8; animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .canvas-container {
+            background: #000; border: 1px solid #222; border-radius: 4px;
+            overflow: hidden; display: flex; justify-content: center;
+        }
+        canvas { display: block; max-width: 100%; height: auto; }
+        .footer-info {
+            text-align: center; margin-top: 15px; font-size: 11px;
+            color: #444; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .advanced-toggle-row { display: flex; justify-content: center; margin: -10px 0 10px; }
+        .link-btn {
+            background: none; border: none; color: #666; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer;
+            flex: none; padding: 6px 0; text-decoration: underline;
+        }
+        .link-btn:hover { color: #4EAEE5; background: none; }
+        .advanced-panel {
+            display: none; margin-bottom: 20px; padding: 20px;
+            background: #151515; border: 1px solid #333; border-radius: 8px;
+        }
+        .advanced-panel.open { display: block; }
+        .advanced-panel h3 {
+            margin: 0 0 14px; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 2px; color: #666; font-weight: 600;
+        }
+        .slider-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px 24px; }
+        .slider-row { display: flex; flex-direction: column; gap: 4px; }
+        .slider-label {
+            display: flex; justify-content: space-between; font-size: 11px;
+            color: #999; letter-spacing: 0.5px;
+        }
+        .slider-label span:last-child { color: #4EAEE5; font-weight: 700; }
+        .advanced-panel input[type="range"] { width: 100%; accent-color: #107AB8; }
+        .advanced-panel .button-group { margin-top: 18px; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Nine Circles Ov</h1>
+    <div class="subtitle">Banner Generator</div>
+
+    <div class="workspace">
+        <div>
+            <div class="controls" style="margin-bottom:14px; padding:14px 20px;">
+                <h3>Drag to reorder · Click empty slot to upload · Click × to remove</h3>
+            </div>
+            <div class="slot-grid" id="slotGrid"></div>
+        </div>
+
+        <div class="controls">
+            <h3>Upload Albums</h3>
+            <div class="upload-zone">
+                <input type="file" id="bulkUpload" accept="image/*" multiple>
+                <strong>Choose Files</strong>
+                <p>Select up to 9 images at once</p>
+            </div>
+            <hr class="divider">
+            <div class="info-row">Filled: <span class="count" id="filledCount">0</span> / 9</div>
+            <hr class="divider">
+            <button onclick="clearAll()" style="flex:none;">Clear All</button>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="primary" id="generateBtn" onclick="generateGrid()" disabled>Generate Grid</button>
+        <button id="regenBtn" onclick="regenerate()" disabled>Regenerate Void</button>
+        <button class="primary" id="downloadBtn" onclick="downloadSquare()" disabled>Download (1000×1000)</button>
+    </div>
+
+    <div class="advanced-toggle-row">
+        <button class="link-btn" id="advToggleBtn" onclick="toggleAdvanced()">Customize Void Parameters</button>
+    </div>
+    <div class="advanced-panel" id="advancedPanel">
+        <h3>Void Parameters</h3>
+        <div class="slider-grid">
+            <div class="slider-row">
+                <div class="slider-label"><span>Gap size</span><span id="v-gap">5</span></div>
+                <input type="range" id="p-gap" min="4" max="30" value="5" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Tendril density</span><span id="v-density">1.5×</span></div>
+                <input type="range" id="p-density" min="0.2" max="2.5" step="0.1" value="1.5" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Tendril length</span><span id="v-length">0.8×</span></div>
+                <input type="range" id="p-length" min="0.3" max="2.5" step="0.1" value="0.8" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Tendril thickness</span><span id="v-thickness">0.8×</span></div>
+                <input type="range" id="p-thickness" min="0.2" max="2.5" step="0.1" value="0.8" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Branchiness</span><span id="v-branch">1.1×</span></div>
+                <input type="range" id="p-branch" min="0" max="2.5" step="0.1" value="1.1" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Ooze blob size</span><span id="v-ooze">2.5×</span></div>
+                <input type="range" id="p-ooze" min="0.3" max="2.5" step="0.1" value="2.5" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Wispiness (curl + thinness)</span><span id="v-wispy">0.55</span></div>
+                <input type="range" id="p-wispy" min="0" max="1" step="0.05" value="0.55" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Smoke opacity</span><span id="v-opacity">0.70</span></div>
+                <input type="range" id="p-opacity" min="0.2" max="1" step="0.05" value="0.70" oninput="onParamChange()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-label"><span>Softness (blur)</span><span id="v-blur">1.0px</span></div>
+                <input type="range" id="p-blur" min="0" max="8" step="0.5" value="1.0" oninput="onParamChange()">
+            </div>
+        </div>
+        <div class="button-group">
+            <button onclick="resetDefaults()">Reset to Defaults</button>
+        </div>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="canvas-container">
+        <canvas id="c" width="1000" height="1000"></canvas>
+    </div>
+    <div class="footer-info">1000 × 1000px · 3×3 grid · void treatment on all gaps</div>
+</div>
+
+<script src="void-engine.js"></script>
+<script>
+// ── TUNED DEFAULTS (from the Void Engine Lab session) ─────────────────────────
+const VOID_DEFAULTS = {
+    gap: 5,
+    density: 1.5,
+    length: 0.8,
+    thickness: 0.8,
+    branch: 1.1,
+    ooze: 2.5,
+    wispy: 0.55,
+    opacity: 0.70,
+    blur: 1.0
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const SLOTS = 9;
+let slots = Array(SLOTS).fill(null);
+let currentSeed = null;
+let dragSrcIdx = null;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+ctx.fillStyle = '#000'; ctx.fillRect(0,0,1000,1000);
+
+// ── ADVANCED PANEL ─────────────────────────────────────────────────────────────
+function toggleAdvanced() {
+    const panel = document.getElementById('advancedPanel');
+    const open = panel.classList.toggle('open');
+    document.getElementById('advToggleBtn').textContent =
+        open ? 'Hide Void Parameters' : 'Customize Void Parameters';
+}
+
+function getParams() {
+    return {
+        gap: +document.getElementById('p-gap').value,
+        density: +document.getElementById('p-density').value,
+        length: +document.getElementById('p-length').value,
+        thickness: +document.getElementById('p-thickness').value,
+        branch: +document.getElementById('p-branch').value,
+        ooze: +document.getElementById('p-ooze').value,
+        wispy: +document.getElementById('p-wispy').value,
+        opacity: +document.getElementById('p-opacity').value,
+        blur: +document.getElementById('p-blur').value
+    };
+}
+
+function onParamChange() {
+    const p = getParams();
+    document.getElementById('v-gap').textContent = p.gap;
+    document.getElementById('v-density').textContent = p.density.toFixed(1) + '×';
+    document.getElementById('v-length').textContent = p.length.toFixed(1) + '×';
+    document.getElementById('v-thickness').textContent = p.thickness.toFixed(1) + '×';
+    document.getElementById('v-branch').textContent = p.branch.toFixed(1) + '×';
+    document.getElementById('v-ooze').textContent = p.ooze.toFixed(1) + '×';
+    document.getElementById('v-wispy').textContent = p.wispy.toFixed(2);
+    document.getElementById('v-opacity').textContent = p.opacity.toFixed(2);
+    document.getElementById('v-blur').textContent = p.blur.toFixed(1) + 'px';
+    if (currentSeed) drawGrid(currentSeed);
+}
+
+function resetDefaults() {
+    document.getElementById('p-gap').value = VOID_DEFAULTS.gap;
+    document.getElementById('p-density').value = VOID_DEFAULTS.density;
+    document.getElementById('p-length').value = VOID_DEFAULTS.length;
+    document.getElementById('p-thickness').value = VOID_DEFAULTS.thickness;
+    document.getElementById('p-branch').value = VOID_DEFAULTS.branch;
+    document.getElementById('p-ooze').value = VOID_DEFAULTS.ooze;
+    document.getElementById('p-wispy').value = VOID_DEFAULTS.wispy;
+    document.getElementById('p-opacity').value = VOID_DEFAULTS.opacity;
+    document.getElementById('p-blur').value = VOID_DEFAULTS.blur;
+    onParamChange();
+}
+
+function setStatus(msg, active=false) {
+    statusEl.textContent = msg;
+    statusEl.className = 'status' + (active ? ' active' : '');
+}
+
+// ── SLOT GRID BUILD ───────────────────────────────────────────────────────────
+function buildGrid() {
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '';
+    slots.forEach((slot, i) => {
+        const el = document.createElement('div');
+        el.className = 'slot' + (slot ? ' has-image' : '');
+        el.dataset.idx = i;
+        el.draggable = !!slot;
+
+        const num = document.createElement('span');
+        num.className = 'slot-number';
+        num.textContent = i + 1;
+        el.appendChild(num);
+
+        if (slot) {
+            const img = document.createElement('img');
+            img.src = slot.src;
+            el.appendChild(img);
+
+            const rm = document.createElement('button');
+            rm.className = 'slot-remove';
+            rm.textContent = '×';
+            rm.title = 'Remove';
+            rm.onclick = e => { e.stopPropagation(); removeSlot(i); };
+            el.appendChild(rm);
+        } else {
+            const lbl = document.createElement('span');
+            lbl.className = 'slot-label';
+            lbl.textContent = 'Drop or click';
+            el.appendChild(lbl);
+
+            el.onclick = () => {
+                const inp = document.createElement('input');
+                inp.type = 'file'; inp.accept = 'image/*';
+                inp.onchange = e => loadFilesIntoSlots([e.target.files[0]], i);
+                inp.click();
+            };
+        }
+
+        el.addEventListener('dragstart', onDragStart);
+        el.addEventListener('dragover',  onDragOver);
+        el.addEventListener('dragleave', onDragLeave);
+        el.addEventListener('drop',      onDrop);
+        el.addEventListener('dragend',   onDragEnd);
+
+        grid.appendChild(el);
+    });
+
+    updateCounts();
+}
+
+// ── DRAG & DROP REORDER ───────────────────────────────────────────────────────
+function onDragStart(e) {
+    dragSrcIdx = +e.currentTarget.dataset.idx;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+function onDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const destIdx = +e.currentTarget.dataset.idx;
+    if (dragSrcIdx === null || dragSrcIdx === destIdx) return;
+    [slots[dragSrcIdx], slots[destIdx]] = [slots[destIdx], slots[dragSrcIdx]];
+    dragSrcIdx = null;
+    buildGrid();
+}
+function onDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    dragSrcIdx = null;
+}
+
+// ── FILE LOADING ──────────────────────────────────────────────────────────────
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        img.onload = () => resolve({ img, src: img.src, name: file.name });
+        img.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function loadFilesIntoSlots(files, startSlot=null) {
+    const fileArr = Array.from(files).slice(0, SLOTS);
+    const loaded = await Promise.all(fileArr.map(loadImage));
+
+    if (startSlot !== null) {
+        slots[startSlot] = loaded[0];
+    } else {
+        let si = 0;
+        for (const item of loaded) {
+            while (si < SLOTS && slots[si]) si++;
+            if (si >= SLOTS) break;
+            slots[si] = item;
+            si++;
+        }
+    }
+    buildGrid();
+}
+
+document.getElementById('bulkUpload').onchange = e => {
+    loadFilesIntoSlots(e.target.files);
+    e.target.value = '';
+};
+
+// ── SLOT OPS ──────────────────────────────────────────────────────────────────
+function removeSlot(i) {
+    slots[i] = null;
+    buildGrid();
+    if (filledCount() === 0) {
+        ctx.fillStyle='#000'; ctx.fillRect(0,0,1000,1000);
+        setStatus('', false);
+    }
+}
+
+function clearAll() {
+    slots = Array(SLOTS).fill(null);
+    currentSeed = null;
+    buildGrid();
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,1000,1000);
+    setStatus('', false);
+}
+
+function filledCount() { return slots.filter(Boolean).length; }
+
+function updateCounts() {
+    const n = filledCount();
+    document.getElementById('filledCount').textContent = n;
+    const ready = n === SLOTS;
+    document.getElementById('generateBtn').disabled = !ready;
+    document.getElementById('regenBtn').disabled = !currentSeed || !ready;
+    document.getElementById('downloadBtn').disabled = !currentSeed;
+}
+
+// ── LAYOUT (3×3 grid) ──────────────────────────────────────────────────────────
+function getLayout() {
+    const GAP = +document.getElementById('p-gap').value;
+    const SZ  = Math.floor((1000 - 4*GAP) / 3);
+    const HGAP = Math.floor((1000 - 3*SZ) / 4);
+    return { SZ, GAP: HGAP };
+}
+
+function cellOrigin(col, row, SZ, GAP) {
+    return [GAP + col*(SZ+GAP), GAP + row*(SZ+GAP)];
+}
+
+// ── DRAW ───────────────────────────────────────────────────────────────────────
+function drawGrid(seed) {
+    const rng = makeRng(seed);
+    const cfg = getParams();
+    const { SZ, GAP } = getLayout();
+    const oc = document.createElement('canvas');
+    oc.width = oc.height = 1000;
+    const od = oc.getContext('2d');
+    od.fillStyle = '#000';
+
+    od.fillRect(0, 0, 1000, GAP);
+    od.fillRect(0, 1000-GAP, 1000, GAP);
+    od.fillRect(0, GAP, GAP, 1000-2*GAP);
+    od.fillRect(1000-GAP, GAP, GAP, 1000-2*GAP);
+    for (let col = 0; col < 2; col++) {
+        const x = GAP + (col+1)*SZ + col*GAP;
+        od.fillRect(x, GAP, GAP, 1000-2*GAP);
+    }
+    for (let row = 0; row < 2; row++) {
+        const y = GAP + (row+1)*SZ + row*GAP;
+        od.fillRect(GAP, y, 1000-2*GAP, GAP);
+    }
+
+    const x0=GAP, y0=GAP, x1=1000-GAP, y1=1000-GAP;
+    oozeEdge(od,rng,cfg, x0,y0, x1,y0, 32, 6,24, 0);
+    oozeEdge(od,rng,cfg, x0,y1, x1,y1, 32, 6,24, 0);
+    oozeEdge(od,rng,cfg, x0,y0, x0,y1, 22, 6,22, 90);
+    oozeEdge(od,rng,cfg, x1,y0, x1,y1, 22, 6,22, 90);
+
+    for (let col = 0; col < 2; col++) {
+        const gx = GAP + (col+1)*SZ + col*GAP;
+        const gx2 = gx + GAP;
+        oozeEdge(od,rng,cfg, gx,  y0, gx,  y1, 22, 5,20, 90);
+        oozeEdge(od,rng,cfg, gx2, y0, gx2, y1, 22, 5,20, 90);
+        const nFill = Math.max(1, Math.round(10*cfg.density));
+        for (let k = 0; k < nFill; k++) {
+            eblob(od, gx+GAP/2+(rng()-0.5)*4, y0+rng()*(y1-y0),
+                  (2+rng()*3)*cfg.ooze, (5+rng()*8)*cfg.ooze, 90);
+        }
+    }
+    for (let row = 0; row < 2; row++) {
+        const gy  = GAP + (row+1)*SZ + row*GAP;
+        const gy2 = gy + GAP;
+        oozeEdge(od,rng,cfg, x0, gy,  x1, gy,  22, 5,20, 0);
+        oozeEdge(od,rng,cfg, x0, gy2, x1, gy2, 22, 5,20, 0);
+        const nFill = Math.max(1, Math.round(10*cfg.density));
+        for (let k = 0; k < nFill; k++) {
+            eblob(od, x0+rng()*(x1-x0), gy+GAP/2+(rng()-0.5)*4,
+                  (5+rng()*8)*cfg.ooze, (2+rng()*3)*cfg.ooze, 0);
+        }
+    }
+
+    const cornerPts = [[x0,y0],[x1,y0],[x0,y1],[x1,y1]];
+    for (let col = 0; col < 2; col++) {
+        for (let row = 0; row < 2; row++) {
+            const ix = GAP + (col+1)*SZ + col*GAP + GAP/2;
+            const iy = GAP + (row+1)*SZ + row*GAP + GAP/2;
+            cornerPts.push([ix, iy]);
+        }
+    }
+    cornerPts.forEach(([cx,cy]) => {
+        const r = (14 + rng()*24) * cfg.ooze;
+        const count = Math.max(2, Math.round(5*cfg.density));
+        poolCluster(od, rng, cfg, cx, cy, r, count);
+    });
+
+    spawnEdge(od,rng,cfg, x0,y0, x1,y0,  Math.PI/2,   8);
+    spawnEdge(od,rng,cfg, x0,y1, x1,y1, -Math.PI/2,   8);
+    spawnEdge(od,rng,cfg, x0,y0, x0,y1,  0,            6);
+    spawnEdge(od,rng,cfg, x1,y0, x1,y1,  Math.PI,      6);
+
+    [[x0,y0,Math.PI/4],[x1,y0,3*Math.PI/4],
+     [x0,y1,-Math.PI/4],[x1,y1,-3*Math.PI/4]].forEach(([cx,cy,ba]) => {
+        const n = Math.max(1, Math.round((3+Math.floor(rng()*3))*cfg.density));
+        for (let i = 0; i < n; i++) {
+            const ox=Math.cos(ba)*(3+rng()*12), oy=Math.sin(ba)*(3+rng()*12);
+            tendril(od,rng,cfg, cx+ox,cy+oy,
+                    ba+(rng()-0.5)*1.6, (50+rng()*180)*cfg.length, (2.5+rng()*10)*cfg.thickness);
+        }
+    });
+
+    for (let col = 0; col < 2; col++) {
+        const gxL = GAP + (col+1)*SZ + col*GAP;
+        const gxR = gxL + GAP;
+        gapTendrils(od,rng,cfg, gxL, gxR, y0, y1, true, GAP);
+    }
+    for (let row = 0; row < 2; row++) {
+        const gyT = GAP + (row+1)*SZ + row*GAP;
+        const gyB = gyT + GAP;
+        gapTendrils(od,rng,cfg, gyT, gyB, x0, x1, false, GAP);
+    }
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 1000, 1000);
+    slots.forEach((slot, i) => {
+        if (!slot) return;
+        const col = i % 3, row = Math.floor(i / 3);
+        const [ax, ay] = cellOrigin(col, row, SZ, GAP);
+        ctx.drawImage(slot.img, ax, ay, SZ, SZ);
+    });
+    ctx.drawImage(applyBlur(oc, cfg.blur), 0, 0);
+}
+
+// ── GENERATE / REGEN ──────────────────────────────────────────────────────────
+function generateGrid() {
+    if (filledCount() < SLOTS) { alert('Please fill all 9 slots first'); return; }
+    setStatus('Manifesting darkness...', true);
+    setTimeout(() => {
+        currentSeed = Math.floor(Math.random() * 2**32);
+        drawGrid(currentSeed);
+        setStatus('The void awaits.', false);
+        updateCounts();
+    }, 50);
+}
+
+function regenerate() {
+    if (!currentSeed) return;
+    setStatus('Reshaping the abyss...', true);
+    setTimeout(() => {
+        currentSeed = Math.floor(Math.random() * 2**32);
+        drawGrid(currentSeed);
+        setStatus('Darkness renewed.', false);
+    }, 50);
+}
+
+// ── DOWNLOAD ──────────────────────────────────────────────────────────────────
+function downloadSquare() {
+    canvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.download = 'nine-circles-grid.png';
+        a.href = URL.createObjectURL(blob);
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setStatus('Grid summoned.', false);
+    }, 'image/png');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildGrid();
+</script>
+</body>
+</html>
