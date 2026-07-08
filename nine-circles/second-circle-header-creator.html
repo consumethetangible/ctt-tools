@@ -32,21 +32,76 @@
             margin-bottom: 30px; border: 1px solid #333;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .input-group { margin-bottom: 0; }
-        label {
-            display: block; margin-bottom: 8px; font-size: 11px;
-            text-transform: uppercase; letter-spacing: 1.5px; color: #999; font-weight: 600;
+        .slot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
         }
-        input[type="file"] {
-            width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #444;
-            border-radius: 4px; color: #fff; font-size: 14px; box-sizing: border-box;
-            transition: border-color 0.3s; cursor: pointer;
+        .slot {
+            aspect-ratio: 3/4;
+            background: #0e0e11;
+            border: 1px dashed #3a3a42;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
         }
-        input[type="file"]:hover { border-color: #666; }
+        .slot:hover { border-color: #666; }
+        .slot.drag-over { border-color: #4EAEE5; border-style: solid; background: #1a1a2e; }
+        .slot.dragging { opacity: 0.4; }
+        .slot.has-image { border-style: solid; border-color: #3a3a42; cursor: grab; }
+        .slot.has-image:active { cursor: grabbing; }
+        .slot img {
+            width: 100%; height: 100%; object-fit: contain;
+            position: absolute; top: 0; left: 0; background: #000;
+            pointer-events: none;
+        }
+        .slot-caption {
+            font-size: 10px; color: #555; text-transform: uppercase;
+            letter-spacing: 1px; text-align: center; pointer-events: none; padding: 0 8px;
+        }
+        .slot-number {
+            position: absolute; top: 6px; left: 8px;
+            font-size: 10px; color: rgba(255,255,255,0.55);
+            font-weight: 700; letter-spacing: 1px;
+            pointer-events: none; z-index: 2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        .slot-remove {
+            position: absolute; top: 6px; right: 6px;
+            width: 20px; height: 20px;
+            background: rgba(0,0,0,0.75); border: none;
+            border-radius: 50%; color: #ccc; font-size: 13px;
+            cursor: pointer; display: none; align-items: center;
+            justify-content: center; z-index: 3; padding: 0; line-height: 1;
+        }
+        .slot:hover .slot-remove { display: flex; }
+        .slot-remove:hover { background: rgba(180,0,0,0.85); color: #fff; }
+
+        .upload-zone {
+            border: 1px dashed #3a3a42; border-radius: 4px;
+            padding: 16px; text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative; margin-bottom: 16px;
+        }
+        .upload-zone:hover { border-color: #4EAEE5; background: #1a1a2e; }
+        .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .upload-zone p { margin: 0; font-size: 12px; color: #666; }
+        .upload-zone strong { display: block; font-size: 13px; color: #ccc; margin-bottom: 4px; }
+
+        .info-row {
+            font-size: 11px; color: #555; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 16px;
+        }
+        .count { color: #4EAEE5; font-weight: 700; }
         .button-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
         button {
-            padding: 12px 24px; border: 1px solid #555; border-radius: 4px;
+            padding: 12px 22px; border: 1px solid #555; border-radius: 4px;
             background: #222; color: #fff; font-size: 13px; cursor: pointer;
             text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
             transition: all 0.2s; flex: 1; min-width: 120px;
@@ -68,11 +123,6 @@
         .info {
             text-align: center; margin-top: 15px; font-size: 11px;
             color: #444; letter-spacing: 1px; text-transform: uppercase;
-        }
-        .preview-strip { display: flex; gap: 8px; margin-bottom: 10px; }
-        .preview-thumb {
-            width: 60px; height: 60px; background: #111; border: 1px solid #333;
-            border-radius: 4px; object-fit: cover; display: none;
         }
         .advanced-toggle-row { display: flex; justify-content: flex-end; margin-top: 14px; }
         .link-btn {
@@ -107,27 +157,24 @@
         <div class="subtitle">Header Creator — Nine Circles</div>
 
         <div class="input-section">
-            <div class="input-row">
-                <div class="input-group">
-                    <label>Album 1 (Left)</label>
-                    <input type="file" id="album1" accept="image/*" onchange="previewImage(this,'prev1')">
-                    <img class="preview-thumb" id="prev1">
-                </div>
-                <div class="input-group">
-                    <label>Album 2 (Right)</label>
-                    <input type="file" id="album2" accept="image/*" onchange="previewImage(this,'prev2')">
-                    <img class="preview-thumb" id="prev2">
-                </div>
+            <div class="upload-zone">
+                <input type="file" id="bulkUpload" accept="image/*" multiple>
+                <strong>Choose Files</strong>
+                <p>Select up to 2 images at once — drag between slots to reorder</p>
             </div>
+
+            <div class="slot-grid" id="slotGrid"></div>
+
+            <div class="info-row">Filled: <span class="count" id="filledCount">0</span> / 2</div>
+
             <div class="button-group">
-                <button class="primary" onclick="generateHeader()">Generate Header</button>
-                <button onclick="regenerate()">Regenerate Void</button>
-                <button onclick="swapImages()">Swap Albums</button>
+                <button class="primary" id="generateBtn" onclick="generateHeader()" disabled>Generate Header</button>
+                <button id="regenBtn" onclick="regenerate()" disabled>Regenerate Void</button>
                 <button onclick="clearAll()">Clear</button>
             </div>
             <div class="button-group">
-                <button class="primary" onclick="downloadSquare()">Download Square (1000×1000)</button>
-                <button class="primary" onclick="downloadRect()">Download 3:2 (1000×667)</button>
+                <button class="primary" id="downloadSquareBtn" onclick="downloadSquare()" disabled>Download Square (1000×1000)</button>
+                <button class="primary" id="downloadRectBtn" onclick="downloadRect()" disabled>Download 3:2 (1000×667)</button>
             </div>
 
             <div class="advanced-toggle-row">
@@ -204,7 +251,10 @@ const VOID_DEFAULTS = {
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const statusEl = document.getElementById('status');
-let img1 = null, img2 = null;
+const SLOTS = 2;
+const SLOT_CAPTIONS = ['Album (Left)', 'Album (Right)'];
+let slots = Array(SLOTS).fill(null);
+let dragSrcIdx = null;
 let currentSeed = null;
 
 ctx.fillStyle = '#000';
@@ -243,7 +293,7 @@ function onParamChange() {
     document.getElementById('v-wispy').textContent = p.wispy.toFixed(2);
     document.getElementById('v-opacity').textContent = p.opacity.toFixed(2);
     document.getElementById('v-blur').textContent = p.blur.toFixed(1) + 'px';
-    if (img1 && img2 && currentSeed) drawHeader(currentSeed);
+    if (filledCount() === SLOTS && currentSeed) drawHeader(currentSeed);
 }
 
 function resetDefaults() {
@@ -332,8 +382,8 @@ function drawHeader(seed) {
 
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 1000, 1000);
-    ctx.drawImage(img1, L.SX, L.SY, L.SZ, L.SZ);
-    ctx.drawImage(img2, L.SX+L.SZ+L.GAP, L.SY, L.SZ, L.SZ);
+    ctx.drawImage(slots[0].img, L.SX, L.SY, L.SZ, L.SZ);
+    ctx.drawImage(slots[1].img, L.SX+L.SZ+L.GAP, L.SY, L.SZ, L.SZ);
     ctx.drawImage(applyBlur(oc, cfg.blur), 0, 0);
 }
 
@@ -343,41 +393,171 @@ function setStatus(msg, active=false) {
     statusEl.className = 'status' + (active ? ' active' : '');
 }
 
-function previewImage(input, previewId) {
-    const preview = document.getElementById(previewId);
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = e => { preview.src = e.target.result; preview.style.display='block'; };
-        reader.readAsDataURL(input.files[0]);
-    }
+// ── SLOT GRID BUILD ───────────────────────────────────────────────────────────
+function buildGrid() {
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '';
+    slots.forEach((slot, i) => {
+        const el = document.createElement('div');
+        el.className = 'slot' + (slot ? ' has-image' : '');
+        el.dataset.idx = i;
+        el.draggable = !!slot;
+
+        const num = document.createElement('span');
+        num.className = 'slot-number';
+        num.textContent = i + 1;
+        el.appendChild(num);
+
+        if (slot) {
+            const img = document.createElement('img');
+            img.src = slot.src;
+            el.appendChild(img);
+
+            const rm = document.createElement('button');
+            rm.className = 'slot-remove';
+            rm.textContent = '×';
+            rm.title = 'Remove';
+            rm.onclick = e => { e.stopPropagation(); removeSlot(i); };
+            el.appendChild(rm);
+        } else {
+            const cap = document.createElement('span');
+            cap.className = 'slot-caption';
+            cap.textContent = SLOT_CAPTIONS[i] + ' — drop or click';
+            el.appendChild(cap);
+
+            el.onclick = () => {
+                const inp = document.createElement('input');
+                inp.type = 'file'; inp.accept = 'image/*';
+                inp.onchange = e => loadFilesIntoSlots([e.target.files[0]], i);
+                inp.click();
+            };
+        }
+
+        el.addEventListener('dragstart', onDragStart);
+        el.addEventListener('dragover',  onDragOver);
+        el.addEventListener('dragleave', onDragLeave);
+        el.addEventListener('drop',      onDrop);
+        el.addEventListener('dragend',   onDragEnd);
+
+        grid.appendChild(el);
+    });
+
+    updateCounts();
 }
 
+// ── DRAG & DROP REORDER ───────────────────────────────────────────────────────
+function onDragStart(e) {
+    dragSrcIdx = +e.currentTarget.dataset.idx;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+function onDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const destIdx = +e.currentTarget.dataset.idx;
+    if (dragSrcIdx === null || dragSrcIdx === destIdx) return;
+    [slots[dragSrcIdx], slots[destIdx]] = [slots[destIdx], slots[dragSrcIdx]];
+    dragSrcIdx = null;
+    buildGrid();
+    if (currentSeed) drawHeader(currentSeed);
+}
+function onDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    dragSrcIdx = null;
+}
+
+// ── FILE LOADING ──────────────────────────────────────────────────────────────
 function loadImage(file) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         const reader = new FileReader();
         reader.onload = e => { img.src = e.target.result; };
-        img.onload = () => resolve(img);
+        img.onload = () => resolve({ img, src: img.src });
         img.onerror = reject;
         reader.readAsDataURL(file);
     });
 }
 
-async function generateHeader() {
-    const f1 = document.getElementById('album1').files[0];
-    const f2 = document.getElementById('album2').files[0];
-    if (!f1 || !f2) { alert('Please select both album images'); return; }
-    setStatus('Manifesting darkness...', true);
-    try {
-        [img1, img2] = await Promise.all([loadImage(f1), loadImage(f2)]);
+async function loadFilesIntoSlots(files, startSlot = null) {
+    const fileArr = Array.from(files).filter(Boolean).slice(0, SLOTS);
+    const loaded = await Promise.all(fileArr.map(loadImage));
+
+    if (startSlot !== null) {
+        slots[startSlot] = loaded[0];
+    } else {
+        let si = 0;
+        for (const item of loaded) {
+            while (si < SLOTS && slots[si]) si++;
+            if (si >= SLOTS) break;
+            slots[si] = item;
+            si++;
+        }
+    }
+    buildGrid();
+    if (filledCount() === SLOTS) {
         currentSeed = Math.floor(Math.random() * 2**32);
         drawHeader(currentSeed);
         setStatus('The void awaits.', false);
-    } catch(e) { alert('Error loading images'); setStatus('', false); }
+    }
+}
+
+document.getElementById('bulkUpload').onchange = e => {
+    loadFilesIntoSlots(e.target.files);
+    e.target.value = '';
+};
+
+// ── SLOT OPS ──────────────────────────────────────────────────────────────────
+function removeSlot(i) {
+    slots[i] = null;
+    buildGrid();
+    if (filledCount() === 0) {
+        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 1000, 1000);
+        currentSeed = null;
+        setStatus('');
+    }
+}
+
+function clearAll() {
+    slots = Array(SLOTS).fill(null);
+    currentSeed = null;
+    buildGrid();
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 1000, 1000);
+    setStatus('', false);
+}
+
+function filledCount() { return slots.filter(Boolean).length; }
+
+function updateCounts() {
+    const n = filledCount();
+    document.getElementById('filledCount').textContent = n;
+    const ready = n === SLOTS;
+    document.getElementById('generateBtn').disabled = !ready;
+    document.getElementById('regenBtn').disabled = !currentSeed || !ready;
+    document.getElementById('downloadSquareBtn').disabled = !currentSeed;
+    document.getElementById('downloadRectBtn').disabled = !currentSeed;
+}
+
+function generateHeader() {
+    if (filledCount() < SLOTS) { alert('Please fill both slots first'); return; }
+    setStatus('Manifesting darkness...', true);
+    setTimeout(() => {
+        currentSeed = Math.floor(Math.random() * 2**32);
+        drawHeader(currentSeed);
+        setStatus('The void awaits.', false);
+        updateCounts();
+    }, 50);
 }
 
 function regenerate() {
-    if (!img1 || !img2) { alert('Please generate a header first'); return; }
+    if (!currentSeed) return;
     setStatus('Reshaping the abyss...', true);
     setTimeout(() => {
         currentSeed = Math.floor(Math.random() * 2**32);
@@ -386,27 +566,8 @@ function regenerate() {
     }, 50);
 }
 
-function swapImages() {
-    if (!img1 || !img2) { alert('Please generate a header first'); return; }
-    [img1, img2] = [img2, img1];
-    drawHeader(currentSeed);
-    setStatus('Albums swapped.', false);
-}
-
-function clearAll() {
-    img1 = img2 = null; currentSeed = null;
-    document.getElementById('album1').value = '';
-    document.getElementById('album2').value = '';
-    ['prev1','prev2'].forEach(id => {
-        const el = document.getElementById(id);
-        el.style.display='none'; el.src='';
-    });
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,1000,1000);
-    setStatus('', false);
-}
-
 function downloadSquare() {
-    if (!img1||!img2) { alert('Please generate a header first'); return; }
+    if (!currentSeed) return;
     canvas.toBlob(blob => {
         const a = document.createElement('a');
         a.download = 'nine-circles-second-circle-square.png';
@@ -418,7 +579,7 @@ function downloadSquare() {
 }
 
 function downloadRect() {
-    if (!img1||!img2) { alert('Please generate a header first'); return; }
+    if (!currentSeed) return;
     const tmp = document.createElement('canvas');
     tmp.width = 1000; tmp.height = 667;
     tmp.getContext('2d').drawImage(canvas, 0, (1000-667)/2, 1000, 667, 0, 0, 1000, 667);
@@ -432,9 +593,8 @@ function downloadRect() {
     }, 'image/png');
 }
 
-document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) generateHeader();
-});
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildGrid();
 </script>
 </body>
 </html>
