@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinema Dual Filmstrip Header Creator</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #16161a;
+            color: #e8e8ec;
+            padding: 40px 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container { max-width: 1000px; width: 100%; }
+        h1 {
+            text-align: center; margin-bottom: 10px; font-weight: 700;
+            letter-spacing: 3px; font-size: 28px; text-transform: uppercase;
+            color: #fff;
+        }
+        .subtitle {
+            text-align: center; margin-bottom: 30px; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 2px; color: #888;
+        }
+        .input-section {
+            background: #1e1e24; padding: 30px; border-radius: 8px;
+            margin-bottom: 30px; border: 1px solid #333;
+        }
+        .slot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .slot {
+            aspect-ratio: 3/4;
+            background: #0e0e11;
+            border: 1px dashed #3a3a42;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .slot:hover { border-color: #666; }
+        .slot.drag-over { border-color: #cfcbd0; border-style: solid; background: #26242a; }
+        .slot.dragging { opacity: 0.4; }
+        .slot.has-image { border-style: solid; border-color: #3a3a42; cursor: grab; }
+        .slot.has-image:active { cursor: grabbing; }
+        .slot img {
+            width: 100%; height: 100%; object-fit: contain;
+            position: absolute; top: 0; left: 0; background: #000;
+            pointer-events: none;
+        }
+        .slot-caption {
+            font-size: 10px; color: #555; text-transform: uppercase;
+            letter-spacing: 1px; text-align: center; pointer-events: none; padding: 0 8px;
+        }
+        .slot-number {
+            position: absolute; top: 6px; left: 8px;
+            font-size: 10px; color: rgba(255,255,255,0.55);
+            font-weight: 700; letter-spacing: 1px;
+            pointer-events: none; z-index: 2;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        .slot-remove {
+            position: absolute; top: 6px; right: 6px;
+            width: 20px; height: 20px;
+            background: rgba(0,0,0,0.75); border: none;
+            border-radius: 50%; color: #ccc; font-size: 13px;
+            cursor: pointer; display: none; align-items: center;
+            justify-content: center; z-index: 3; padding: 0; line-height: 1;
+        }
+        .slot:hover .slot-remove { display: flex; }
+        .slot-remove:hover { background: rgba(180,0,0,0.85); color: #fff; }
+
+        .upload-zone {
+            border: 1px dashed #3a3a42; border-radius: 4px;
+            padding: 16px; text-align: center; cursor: pointer;
+            transition: all 0.2s; position: relative; margin-bottom: 16px;
+        }
+        .upload-zone:hover { border-color: #cfcbd0; background: #26242a; }
+        .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+        .upload-zone p { margin: 0; font-size: 12px; color: #666; }
+        .upload-zone strong { display: block; font-size: 13px; color: #ccc; margin-bottom: 4px; }
+
+        .info-row {
+            font-size: 11px; color: #555; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 16px;
+        }
+        .count { color: #d8d4d0; font-weight: 700; }
+
+        .button-group { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+        button {
+            padding: 12px 22px; border: 1px solid #555; border-radius: 4px;
+            background: #26262e; color: #fff; font-size: 13px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+            transition: all 0.2s; flex: 1; min-width: 120px;
+        }
+        button:hover { background: #333; border-color: #888; }
+        button.primary { background: #2a282c; border-color: #cfcbd0; color: #e8e6ea; }
+        button.primary:hover { background: #d8d4d0; color: #17151a; }
+        button:disabled { opacity: 0.35; cursor: not-allowed; }
+        .status {
+            text-align: center; padding: 10px; font-size: 12px; letter-spacing: 2px;
+            text-transform: uppercase; color: #555; margin-bottom: 10px; min-height: 26px;
+        }
+        .canvas-container {
+            background: #000; border: 1px solid #222; border-radius: 4px;
+            overflow: hidden; display: flex; justify-content: center;
+        }
+        canvas { display: block; max-width: 100%; height: auto; }
+        .info {
+            text-align: center; margin-top: 15px; font-size: 11px;
+            color: #555; letter-spacing: 1px; text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Cinema Dual</h1>
+    <div class="subtitle">Filmstrip Header Creator — Cinema Dual</div>
+
+    <div class="input-section">
+        <div class="upload-zone">
+            <input type="file" id="bulkUpload" accept="image/*" multiple>
+            <strong>Choose Files</strong>
+            <p>Select up to 3 images at once — drag between slots to reorder</p>
+        </div>
+
+        <div class="slot-grid" id="slotGrid"></div>
+
+        <div class="info-row">Filled: <span class="count" id="filledCount">0</span> / 3</div>
+
+        <div class="button-group">
+            <button class="primary" id="generateBtn" onclick="generateHeader()" disabled>Generate Header</button>
+            <button id="regenBtn" onclick="regenerateGrain()" disabled>Regenerate Grain</button>
+            <button onclick="clearAll()">Clear</button>
+        </div>
+        <div class="button-group">
+            <button class="primary" id="downloadBtn" onclick="downloadImg()" disabled>Download (900×500)</button>
+        </div>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="canvas-container">
+        <canvas id="c" width="900" height="500"></canvas>
+    </div>
+    <div class="info">900 × 500px · Featured image size for episode posts</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const statusEl = document.getElementById('status');
+let grainSeed = Math.floor(Math.random() * 2**32);
+let currentSeed = null;
+
+// ── SLOT STATE ─────────────────────────────────────────────────────────────────
+const SLOTS = 3;
+const SLOT_CAPTIONS = ['Poster', 'Episode Art', 'Poster'];
+let slots = Array(SLOTS).fill(null);
+let dragSrcIdx = null;
+
+ctx.fillStyle = '#000';
+ctx.fillRect(0, 0, 900, 500);
+
+function setStatus(msg) { statusEl.textContent = msg; }
+
+function makeRng(seed) {
+    let s = seed >>> 0;
+    return () => {
+        s += 0x6D2B79F5;
+        let t = Math.imul(s ^ s >>> 15, 1 | s);
+        t ^= t + Math.imul(t ^ t >>> 7, 61 | t);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+}
+
+// ── SLOT GRID BUILD ───────────────────────────────────────────────────────────
+function buildGrid() {
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '';
+    slots.forEach((slot, i) => {
+        const el = document.createElement('div');
+        el.className = 'slot' + (slot ? ' has-image' : '');
+        el.dataset.idx = i;
+        el.draggable = !!slot;
+
+        const num = document.createElement('span');
+        num.className = 'slot-number';
+        num.textContent = i + 1;
+        el.appendChild(num);
+
+        if (slot) {
+            const img = document.createElement('img');
+            img.src = slot.src;
+            el.appendChild(img);
+
+            const rm = document.createElement('button');
+            rm.className = 'slot-remove';
+            rm.textContent = '×';
+            rm.title = 'Remove';
+            rm.onclick = e => { e.stopPropagation(); removeSlot(i); };
+            el.appendChild(rm);
+        } else {
+            const cap = document.createElement('span');
+            cap.className = 'slot-caption';
+            cap.textContent = SLOT_CAPTIONS[i] + ' — drop or click';
+            el.appendChild(cap);
+
+            el.onclick = () => {
+                const inp = document.createElement('input');
+                inp.type = 'file'; inp.accept = 'image/*';
+                inp.onchange = e => loadFilesIntoSlots([e.target.files[0]], i);
+                inp.click();
+            };
+        }
+
+        el.addEventListener('dragstart', onDragStart);
+        el.addEventListener('dragover',  onDragOver);
+        el.addEventListener('dragleave', onDragLeave);
+        el.addEventListener('drop',      onDrop);
+        el.addEventListener('dragend',   onDragEnd);
+
+        grid.appendChild(el);
+    });
+
+    updateCounts();
+}
+
+// ── DRAG & DROP REORDER ───────────────────────────────────────────────────────
+function onDragStart(e) {
+    dragSrcIdx = +e.currentTarget.dataset.idx;
+    e.currentTarget.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+function onDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    const destIdx = +e.currentTarget.dataset.idx;
+    if (dragSrcIdx === null || dragSrcIdx === destIdx) return;
+    [slots[dragSrcIdx], slots[destIdx]] = [slots[destIdx], slots[dragSrcIdx]];
+    dragSrcIdx = null;
+    buildGrid();
+    if (currentSeed) render();
+}
+function onDragEnd(e) {
+    e.currentTarget.classList.remove('dragging');
+    dragSrcIdx = null;
+}
+
+// ── FILE LOADING ──────────────────────────────────────────────────────────────
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        img.onload = () => resolve({ img, src: img.src });
+        img.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function loadFilesIntoSlots(files, startSlot = null) {
+    const fileArr = Array.from(files).filter(Boolean).slice(0, SLOTS);
+    const loaded = await Promise.all(fileArr.map(loadImage));
+
+    if (startSlot !== null) {
+        slots[startSlot] = loaded[0];
+    } else {
+        let si = 0;
+        for (const item of loaded) {
+            while (si < SLOTS && slots[si]) si++;
+            if (si >= SLOTS) break;
+            slots[si] = item;
+            si++;
+        }
+    }
+    buildGrid();
+    if (currentSeed) render();
+}
+
+document.getElementById('bulkUpload').onchange = e => {
+    loadFilesIntoSlots(e.target.files);
+    e.target.value = '';
+};
+
+// ── SLOT OPS ──────────────────────────────────────────────────────────────────
+function removeSlot(i) {
+    slots[i] = null;
+    buildGrid();
+    if (filledCount() === 0) {
+        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 900, 500);
+        currentSeed = null;
+        setStatus('');
+    } else if (currentSeed) {
+        render();
+    }
+}
+
+function clearAll() {
+    slots = Array(SLOTS).fill(null);
+    currentSeed = null;
+    buildGrid();
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 900, 500);
+    setStatus('');
+}
+
+function filledCount() { return slots.filter(Boolean).length; }
+
+function updateCounts() {
+    const n = filledCount();
+    document.getElementById('filledCount').textContent = n;
+    const ready = n === SLOTS;
+    document.getElementById('generateBtn').disabled = !ready;
+    document.getElementById('regenBtn').disabled = !currentSeed || !ready;
+    document.getElementById('downloadBtn').disabled = !currentSeed;
+}
+
+// ── FILMSTRIP LAYOUT ───────────────────────────────────────────────────────────
+const STRIP_H = 42;      // height of the top/bottom sprocket bands
+const DIVIDER_W = 24;    // width of the dark bars between the 3 images
+const FRAME_MARGIN_SCALE = 0.82; // extra shrink beyond the minimal fit, so black margin shows on ALL sides, not just top/bottom or left/right
+const CORNER_RADIUS = 4; // final on-screen corner radius for each image, in pixels
+
+// Rounded-rect path, used to clip each image's corners.
+function roundRectPath(context, x, y, w, h, r) {
+    r = Math.min(r, w/2, h/2);
+    context.beginPath();
+    context.moveTo(x + r, y);
+    context.arcTo(x + w, y, x + w, y + h, r);
+    context.arcTo(x + w, y + h, x, y + h, r);
+    context.arcTo(x, y + h, x, y, r);
+    context.arcTo(x, y, x + w, y, r);
+    context.closePath();
+}
+
+// Builds the 3-image strip at its natural size: every image scaled to the
+// same height (rowH), each keeping its own aspect ratio — so nothing gets
+// letterboxed or cropped *within* the row itself. Each image is clipped to
+// rounded corners at `radius`, measured in this row's own native pixels
+// (the caller is responsible for scaling that radius up beforehand if this
+// row will later be shrunk, so the final on-screen radius comes out right).
+function buildNativeRow(images, rowH, radius) {
+    const widths = images.map(im => Math.round(rowH * (im.width / im.height)));
+    const rowW = widths.reduce((a,b) => a+b, 0) + DIVIDER_W * 2;
+
+    const rowCanvas = document.createElement('canvas');
+    rowCanvas.width = rowW; rowCanvas.height = rowH;
+    const rctx = rowCanvas.getContext('2d');
+    let x = 0;
+    images.forEach((im, i) => {
+        const w = widths[i];
+        rctx.save();
+        roundRectPath(rctx, x, 0, w, rowH, radius);
+        rctx.clip();
+        rctx.drawImage(im, x, 0, w, rowH);
+        rctx.restore();
+        x += w;
+        if (i < images.length - 1) {
+            rctx.fillStyle = '#0a0a0c';
+            rctx.fillRect(x, 0, DIVIDER_W, rowH);
+            x += DIVIDER_W;
+        }
+    });
+    return { canvas: rowCanvas, rowW, rowH };
+}
+
+function drawSprockets(rng) {
+    ctx.fillStyle = '#0a0a0c';
+    ctx.fillRect(0, 0, 900, STRIP_H);
+    ctx.fillRect(0, 500 - STRIP_H, 900, STRIP_H);
+
+    const holeW = 26, holeH = 18, spacing = 46;
+    const n = Math.ceil(900 / spacing) + 1;
+    const startX = -((n * spacing - 900) / 2);
+    ctx.fillStyle = '#dcd8ce';
+    for (let i = 0; i < n; i++) {
+        const hx = startX + i * spacing;
+        roundRect(ctx, hx, (STRIP_H - holeH) / 2, holeW, holeH, 4);
+        roundRect(ctx, hx, 500 - STRIP_H + (STRIP_H - holeH) / 2, holeW, holeH, 4);
+    }
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, STRIP_H); ctx.lineTo(900, STRIP_H);
+    ctx.moveTo(0, 500 - STRIP_H); ctx.lineTo(900, 500 - STRIP_H);
+    ctx.stroke();
+}
+
+function roundRect(context, x, y, w, h, r) {
+    context.beginPath();
+    context.moveTo(x + r, y);
+    context.arcTo(x + w, y, x + w, y + h, r);
+    context.arcTo(x + w, y + h, x, y + h, r);
+    context.arcTo(x, y + h, x, y, r);
+    context.arcTo(x, y, x + w, y, r);
+    context.closePath();
+    context.fill();
+}
+
+function drawGrain(rng) {
+    const grainCanvas = document.createElement('canvas');
+    grainCanvas.width = 900; grainCanvas.height = 500;
+    const gctx = grainCanvas.getContext('2d');
+    const imgData = gctx.createImageData(900, 500);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        const v = Math.floor(rng() * 255);
+        data[i] = v; data[i+1] = v; data[i+2] = v; data[i+3] = 255;
+    }
+    gctx.putImageData(imgData, 0, 0);
+
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.globalCompositeOperation = 'overlay';
+    ctx.drawImage(grainCanvas, 0, 0);
+    ctx.restore();
+
+    const nScratches = 10 + Math.floor(rng()*8);
+    for (let i = 0; i < nScratches; i++) {
+        const x = rng() * 900;
+        const full = rng() > 0.4;
+        const y0 = full ? STRIP_H + rng()*10 : STRIP_H + rng()*(500 - STRIP_H*2 - 60);
+        const y1 = full ? 500 - STRIP_H - rng()*10 : y0 + 30 + rng()*90;
+        ctx.strokeStyle = `rgba(255,255,255,${0.08 + rng()*0.14})`;
+        ctx.lineWidth = 0.6 + rng()*1.4;
+        ctx.beginPath();
+        ctx.moveTo(x, y0);
+        ctx.lineTo(x + (rng()-0.5)*14, y1);
+        ctx.stroke();
+    }
+
+    const nDark = 4 + Math.floor(rng()*5);
+    for (let i = 0; i < nDark; i++) {
+        const x = rng() * 900;
+        const y0 = STRIP_H + rng()*(500 - STRIP_H*2 - 80);
+        const y1 = y0 + 40 + rng()*120;
+        ctx.strokeStyle = `rgba(0,0,0,${0.1 + rng()*0.15})`;
+        ctx.lineWidth = 0.5 + rng()*1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, y0);
+        ctx.lineTo(x + (rng()-0.5)*10, y1);
+        ctx.stroke();
+    }
+
+    const nFlecks = 40 + Math.floor(rng()*40);
+    for (let i = 0; i < nFlecks; i++) {
+        const x = rng()*900, y = rng()*500;
+        const light = rng() > 0.5;
+        ctx.fillStyle = light ? `rgba(255,255,255,${0.12 + rng()*0.18})` : `rgba(0,0,0,${0.12 + rng()*0.18})`;
+        ctx.fillRect(x, y, 1 + rng()*1.5, 1 + rng()*1.5);
+    }
+}
+
+function render() {
+    const rng = makeRng(grainSeed);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 900, 500);
+
+    const pictureW = 900;
+    const pictureH = 500 - STRIP_H * 2;
+
+    const images = slots.map(s => s.img);
+
+    // Figure out the row's natural width first (just arithmetic, no pixels
+    // drawn yet) so we know the final scale factor ahead of time — that lets
+    // us compensate the corner radius so it comes out to CORNER_RADIUS pixels
+    // in the final image, not some smaller value after shrinking.
+    const widths = images.map(im => Math.round(pictureH * (im.width / im.height)));
+    const rowWNatural = widths.reduce((a,b) => a+b, 0) + DIVIDER_W * 2;
+    const baseScale = Math.min(pictureW / rowWNatural, 1);
+    const scale = baseScale * FRAME_MARGIN_SCALE;
+    const nativeRadius = scale > 0 ? CORNER_RADIUS / scale : CORNER_RADIUS;
+
+    const { canvas: rowCanvas, rowW, rowH } = buildNativeRow(images, pictureH, nativeRadius);
+
+    // Contain-fit the whole assembled row into the picture area, then shrink
+    // it further so black margin shows on every side, not just whichever
+    // dimension happened to be the tightest fit.
+    const dispW = rowW * scale, dispH = rowH * scale;
+    const destX = (900 - dispW) / 2;
+    const destY = STRIP_H + (pictureH - dispH) / 2;
+
+    ctx.drawImage(rowCanvas, 0, 0, rowW, rowH, destX, destY, dispW, dispH);
+
+    drawSprockets(rng);
+    drawGrain(rng);
+}
+
+function generateHeader() {
+    if (filledCount() < SLOTS) { alert('Please fill all 3 slots first'); return; }
+    setStatus('Building filmstrip...');
+    setTimeout(() => {
+        currentSeed = Math.floor(Math.random() * 2**32);
+        render();
+        setStatus('Header ready.');
+        updateCounts();
+    }, 30);
+}
+
+function regenerateGrain() {
+    if (!currentSeed) return;
+    grainSeed = Math.floor(Math.random() * 2**32);
+    render();
+    setStatus('Grain refreshed.');
+}
+
+function downloadImg() {
+    if (!currentSeed) return;
+    canvas.toBlob(blob => {
+        const a = document.createElement('a');
+        a.download = 'cinema-dual-filmstrip-header.png';
+        a.href = URL.createObjectURL(blob);
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        setStatus('Image downloaded.');
+    }, 'image/png');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildGrid();
+</script>
+</body>
+</html>
