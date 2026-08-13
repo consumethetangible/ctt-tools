@@ -296,16 +296,25 @@
     padding: 14px 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
     margin-bottom: 16px;
     border-radius: 0 4px 4px 0;
   }
 
+  .meta-preview-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: nowrap;
+  }
+
   .meta-preview-item {
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
   }
 
   .meta-preview-label {
@@ -452,97 +461,12 @@
     color: var(--text);
   }
 
-  /* ══════════════════════════════════════
-     STYLE GUIDE
-  ══════════════════════════════════════ */
-
-  /* -- sub-tabs -- */
-  .sg-subtabs {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sg-subtab-btn {
-    font-family: var(--font-display);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-  }
-
-  .sg-subtab-btn:hover { color: var(--accent); }
-
-  .sg-subtab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
-
-  .sg-panel { display: none; }
-  .sg-panel.active { display: block; }
-
-  .sg-section-title {
-    font-family: var(--font-display);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin: 32px 0 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .sg-section-title:first-child { margin-top: 0; }
-
-  .sg-section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .sg-note {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    line-height: 1.65;
-    margin-bottom: 18px;
-  }
-
-  .sg-flag {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-size: 8.5px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent-dark);
-    background: var(--accent-light);
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-left: 8px;
-    white-space: nowrap;
-  }
-
-  /* -- color swatches -- */
+  /* ── COLOR SWATCHES ── */
   .color-swatch {
     cursor: pointer;
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid var(--border);
-    background: #fff;
     transition: transform 0.1s, box-shadow 0.1s;
   }
 
@@ -551,7 +475,10 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
 
-  .swatch-block { height: 60px; width: 100%; }
+  .swatch-block {
+    height: 64px;
+    width: 100%;
+  }
 
   .swatch-name {
     font-size: 10px;
@@ -575,305 +502,6 @@
     padding: 0 10px 10px;
     line-height: 1.4;
   }
-
-  .sg-color-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  /* -- typography specimens -- */
-  .sg-specimen {
-    padding: 22px 26px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 14px;
-  }
-
-  .sg-specimen-label {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-  }
-
-  .sg-specimen-meta {
-    font-size: 10.5px;
-    color: var(--text-muted);
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    line-height: 1.6;
-  }
-
-  /* -- spacing scale -- */
-  .sg-scale-row {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sg-scale-row:last-child { border-bottom: none; }
-
-  .sg-scale-swatch {
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  .sg-scale-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    min-width: 190px;
-  }
-
-  .sg-scale-value {
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    color: var(--accent-dark);
-    min-width: 130px;
-  }
-
-  .sg-scale-use {
-    font-size: 11.5px;
-    color: var(--text-muted);
-  }
-
-  /* -- component previews -- */
-  .sg-comp-preview {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 26px;
-    margin-bottom: 14px;
-  }
-
-  .sg-comp-dark-preview {
-    background: #1a1410;
-    border-radius: 4px;
-    padding: 24px 26px;
-    margin-bottom: 14px;
-  }
-
-  /* live copies of actual site component classes, scoped so they can't leak */
-  .sg-live .post-meta-bar {
-    background: #f2ece2;
-    border-left: 4px solid #b5623a;
-    width: 100%;
-    padding: 14px 20px;
-    max-width: 100%;
-    border-radius: 0 4px 4px 0;
-  }
-  .sg-live .post-meta-bar-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .sg-live .post-meta-item { display: flex; align-items: center; gap: 8px; }
-  .sg-live .post-meta-label {
-    font-size: 9px; font-weight: 700; letter-spacing: .15em;
-    text-transform: uppercase; color: #b5623a;
-  }
-  .sg-live .post-meta-value { font-size: 12px; font-weight: 400; color: #2e2a26; letter-spacing: .02em; }
-  .sg-live .post-meta-divider { color: #c8b89a; font-size: 14px; }
-
-  .sg-live .post-rating-block {
-    margin: 0; padding: 28px 0; border-top: 1px solid #d8d0c4; border-bottom: 1px solid #d8d0c4;
-    display: flex; align-items: center; gap: 32px;
-  }
-  .sg-live .post-rating-score {
-    font-family: 'Josefin Sans', sans-serif; font-size: 2.8rem; font-weight: 300;
-    color: #b5623a; letter-spacing: .05em; line-height: 1; white-space: nowrap;
-  }
-  .sg-live .post-rating-descriptor-wrap { display: flex; flex-direction: column; gap: 4px; }
-  .sg-live .post-rating-label {
-    font-family: 'Josefin Sans', sans-serif; font-size: 9px; font-weight: 700;
-    letter-spacing: .2em; text-transform: uppercase; color: #8a7f74;
-  }
-  .sg-live .post-rating-descriptor {
-    font-family: 'Fraunces', serif; font-size: 1.6rem; font-style: italic;
-    font-weight: 300; color: #2e2a26; line-height: 1.2;
-  }
-
-  .sg-live .sg-dropcap-demo {
-    max-width: 560px; font-size: 0.95rem; line-height: 1.7; color: #2e2a26;
-  }
-  .sg-live .sg-dropcap-demo::first-letter {
-    font-family: 'Fraunces', serif; font-size: 4.5rem; font-weight: 400; line-height: .8;
-    float: left; margin-right: 8px; margin-top: 6px; color: #b5623a;
-  }
-
-  .sg-live blockquote {
-    border-left: 4px solid #b5623a; margin: 0; padding: 8px 0 8px 24px;
-    font-family: 'Fraunces', serif; font-size: 1.3rem; font-style: italic;
-    line-height: 1.6; color: #4a3f35;
-  }
-
-  .sg-live .sg-section-label-demo {
-    display: flex; align-items: center; gap: 16px;
-    font-family: 'Josefin Sans', sans-serif; font-size: 12px; font-weight: 600;
-    letter-spacing: .15em; text-transform: uppercase; color: #b5623a;
-  }
-  .sg-live .sg-section-label-demo::after { content: ''; flex: 1; height: 1px; background: #c8b89a; }
-
-  .sg-live .sg-tag-pill-demo {
-    display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
-    color: #ffffff; padding: 3px 12px; border-radius: 10px; margin: 3px 4px 3px 0;
-    font-family: 'Josefin Sans', sans-serif; font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-  }
-
-  .sg-live .sg-browse-btn-demo {
-    display: inline-block; text-align: center; font-family: 'Josefin Sans', sans-serif;
-    font-size: 10px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase;
-    padding: 6px 16px; background: #d4c5b5; color: #222; border-radius: 10px;
-    border: 1px solid #b5623a;
-  }
-
-  .sg-comp-caption {
-    font-size: 10.5px;
-    color: var(--text-muted);
-    margin-top: 10px;
-    line-height: 1.5;
-  }
-
-  /* -- CSS summary accordion -- */
-  .sg-css-block {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-
-  .sg-css-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 18px;
-    background: var(--bg-alt);
-    cursor: pointer;
-  }
-
-  .sg-css-header-text {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-
-  .sg-css-header-class {
-    font-family: 'Courier New', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-
-  .sg-css-header:hover .sg-css-header-text { color: var(--accent); }
-
-  .sg-css-arrow {
-    flex-shrink: 0;
-    color: var(--accent);
-    font-size: 10px;
-    transition: transform 0.2s;
-  }
-
-  .sg-css-block.open .sg-css-arrow { transform: rotate(90deg); }
-
-  .sg-css-body {
-    display: none;
-    padding: 16px 18px;
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--text);
-    border-top: 1px solid var(--border);
-  }
-
-  .sg-css-block.open .sg-css-body { display: block; }
-
-  /* -- post-type samples -- */
-  .sg-posttype-card {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-
-  .sg-posttype-tag {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-
-  .sg-posttype-hero {
-    padding: 30px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-
-  .sg-posttype-title {
-    font-family: var(--font-serif);
-    font-size: 1.4rem;
-    color: #fff;
-    line-height: 1.15;
-  }
-
-  .sg-posttype-title em { font-style: italic; }
-
-  .sg-posttype-art {
-    flex-shrink: 0;
-    border-radius: 4px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    background: linear-gradient(135deg, var(--accent-light), var(--accent));
-  }
-
-  .sg-posttype-body {
-    padding: 18px 28px 22px;
-    background: #fff;
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.75;
-  }
-
-  .sg-posttype-body strong { color: var(--text); }
-
-  .sg-posttype-body ul {
-    margin: 10px 0 0 18px;
-  }
-
-  .sg-9c-hero {
-    background: linear-gradient(135deg, #1a2a33, #0d1a20);
-  }
-
-  .sg-9c-ribbon {
-    width: 90px;
-    height: 90px;
-    border-radius: 4px;
-    background: radial-gradient(ellipse at 30% 30%, rgba(180,220,235,0.5), transparent 60%),
-                linear-gradient(160deg, #6fa8c0, #16333d);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    flex-shrink: 0;
-  }
 </style>
 </head>
 <body>
@@ -887,7 +515,7 @@
   <button class="tab-btn active" onclick="showTab('rating')">Rating Generator</button>
   <button class="tab-btn" onclick="showTab('meta')">Metadata Bar</button>
   <button class="tab-btn" onclick="showTab('banner')">Playlist Banner</button>
-  <button class="tab-btn" onclick="showTab('styleguide')">Style Guide</button>
+  <button class="tab-btn" onclick="showTab('colors')">Color Palette</button>
 </nav>
 
 <!-- ══════════════════════════════════════
@@ -919,7 +547,7 @@
 ═══════════════════════════════════════ -->
 <div class="panel" id="tab-meta">
   <div class="panel-title">Metadata Bar</div>
-  <div class="panel-desc">Fill in the fields below, then copy the HTML and paste it into a Custom HTML block directly after the hero in each review post.</div>
+  <div class="panel-desc">Fill in the fields below, then copy the HTML and paste it into a Custom HTML block directly after the hero in each review post. All styles are embedded inline so they render correctly on WordPress.com without any additional setup.</div>
 
   <div class="tool-card">
     <div class="tool-card-label">Fields</div>
@@ -944,24 +572,27 @@
 
     <div class="tool-card-label">Preview</div>
     <div class="meta-preview" id="meta-preview">
-      <div class="meta-preview-item">
-        <span class="meta-preview-label">Label</span>
-        <span class="meta-preview-value" id="prev-label">—</span>
+      <div class="meta-preview-group">
+        <div class="meta-preview-item">
+          <span class="meta-preview-label">Label</span>
+          <span class="meta-preview-value" id="prev-label">—</span>
+        </div>
+        <span class="meta-divider">·</span>
+        <div class="meta-preview-item">
+          <span class="meta-preview-label">Format</span>
+          <span class="meta-preview-value" id="prev-format">—</span>
+        </div>
       </div>
-      <span class="meta-divider">·</span>
-      <div class="meta-preview-item">
-        <span class="meta-preview-label">Released</span>
-        <span class="meta-preview-value" id="prev-released">—</span>
-      </div>
-      <span class="meta-divider">·</span>
-      <div class="meta-preview-item">
-        <span class="meta-preview-label">Format</span>
-        <span class="meta-preview-value" id="prev-format">—</span>
-      </div>
-      <span class="meta-divider">·</span>
-      <div class="meta-preview-item">
-        <span class="meta-preview-label">Reviewed</span>
-        <span class="meta-preview-value" id="prev-reviewed">—</span>
+      <div class="meta-preview-group">
+        <div class="meta-preview-item">
+          <span class="meta-preview-label">Released</span>
+          <span class="meta-preview-value" id="prev-released">—</span>
+        </div>
+        <span class="meta-divider">·</span>
+        <div class="meta-preview-item">
+          <span class="meta-preview-label">Reviewed</span>
+          <span class="meta-preview-value" id="prev-reviewed">—</span>
+        </div>
       </div>
     </div>
 
@@ -973,6 +604,13 @@
       <button class="btn btn-secondary" onclick="metaClear()">Clear</button>
     </div>
     <div class="confirm-msg" id="meta-confirm"></div>
+  </div>
+
+  <div class="tool-card" style="border-left-color: #8a7f74; background: #eee8df;">
+    <div class="tool-card-label">⚠ Reminder — Set a Manual Excerpt</div>
+    <p style="font-family:'Fraunces',serif; font-style:italic; font-size:0.95rem; color:#2e2a26; line-height:1.6; margin:0;">
+      After pasting the metadata bar, open the <strong style="font-style:normal;">Post</strong> panel in the WordPress editor sidebar and paste your opening sentence or two into the <strong style="font-style:normal;">Excerpt</strong> field. If you skip this, WordPress will auto-generate the excerpt from the post content — which includes the metadata bar values — and they'll bleed into the homepage cards and social shares.
+    </p>
   </div>
 </div>
 
@@ -1003,381 +641,125 @@
 </div>
 
 <!-- ══════════════════════════════════════
-     TAB 4 — STYLE GUIDE
+     TAB 4 — COLOR PALETTE
 ═══════════════════════════════════════ -->
-<div class="panel" id="tab-styleguide">
-  <div class="panel-title">Style Guide</div>
-  <div class="panel-desc">The full CTT design system in one place — colors, type, spacing, components, what's actually in the Additional CSS, and how Reviews, Playlists, and 9C posts differ. Reverse-engineered from the live site, July 2026.</div>
+<div class="panel" id="tab-colors">
+  <div class="panel-title">Color Palette</div>
+  <div class="panel-desc">The full CTT color system. Click any swatch to copy its hex code to the clipboard.</div>
 
-  <div class="sg-subtabs">
-    <button class="sg-subtab-btn active" onclick="showSGTab('colors')">Colors</button>
-    <button class="sg-subtab-btn" onclick="showSGTab('type')">Typography</button>
-    <button class="sg-subtab-btn" onclick="showSGTab('spacing')">Spacing</button>
-    <button class="sg-subtab-btn" onclick="showSGTab('components')">Components</button>
-    <button class="sg-subtab-btn" onclick="showSGTab('csssummary')">Additional CSS</button>
-    <button class="sg-subtab-btn" onclick="showSGTab('posttypes')">Post Types</button>
-  </div>
+  <div class="tool-card">
+    <div class="tool-card-label">Primary</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
 
-  <!-- ── COLORS ── -->
-  <div class="sg-panel active" id="sg-colors">
-    <div class="sg-section-title">Primary / Accent</div>
-    <div class="sg-color-grid">
       <div class="color-swatch" onclick="copyColor('#b5623a', this)">
         <div class="swatch-block" style="background:#b5623a;"></div>
         <div class="swatch-name">Accent</div>
         <div class="swatch-hex">#b5623a</div>
-        <div class="swatch-use">Labels, links, score numeral, tag pill borders</div>
+        <div class="swatch-use">Buttons, borders, labels</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#8a4429', this)">
         <div class="swatch-block" style="background:#8a4429;"></div>
         <div class="swatch-name">Accent Dark</div>
         <div class="swatch-hex">#8a4429</div>
         <div class="swatch-use">Hover states</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#f0c8a0', this)">
-        <div class="swatch-block" style="background:#f0c8a0; border-bottom:1px solid #d8d0c4;"></div>
+        <div class="swatch-block" style="background:#f0c8a0; border:1px solid #d8d0c4;"></div>
         <div class="swatch-name">Accent Light</div>
         <div class="swatch-hex">#f0c8a0</div>
-        <div class="swatch-use">Hero tag pill text, header nav active/hover text</div>
+        <div class="swatch-use">Header nav active text</div>
       </div>
-    </div>
 
-    <div class="sg-section-title">Backgrounds</div>
-    <div class="sg-color-grid">
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Backgrounds</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
       <div class="color-swatch" onclick="copyColor('#f8f4ee', this)">
-        <div class="swatch-block" style="background:#f8f4ee; border-bottom:1px solid #d8d0c4;"></div>
+        <div class="swatch-block" style="background:#f8f4ee; border:1px solid #d8d0c4;"></div>
         <div class="swatch-name">BG Primary</div>
         <div class="swatch-hex">#f8f4ee</div>
-        <div class="swatch-use">Main page background, site-wide</div>
+        <div class="swatch-use">Main page background</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#f2ece2', this)">
-        <div class="swatch-block" style="background:#f2ece2; border-bottom:1px solid #d8d0c4;"></div>
+        <div class="swatch-block" style="background:#f2ece2; border:1px solid #d8d0c4;"></div>
         <div class="swatch-name">BG Alt</div>
         <div class="swatch-hex">#f2ece2</div>
-        <div class="swatch-use">Sidebar widgets, metadata bar background</div>
+        <div class="swatch-use">Cards, tool cards, meta bar</div>
       </div>
+
+      <div class="color-swatch" onclick="copyColor('#1a1410', this)">
+        <div class="swatch-block" style="background:#1a1410;"></div>
+        <div class="swatch-name">BG Dark</div>
+        <div class="swatch-hex">#1a1410</div>
+        <div class="swatch-use">Dark sections, code blocks</div>
+      </div>
+
       <div class="color-swatch" onclick="copyColor('#111111', this)">
         <div class="swatch-block" style="background:#111111;"></div>
         <div class="swatch-name">Header BG</div>
         <div class="swatch-hex">#111111</div>
-        <div class="swatch-use">Site header bar, main nav strip</div>
+        <div class="swatch-use">Site header, compact header</div>
       </div>
-      <div class="color-swatch" onclick="copyColor('rgba(35,22,16,0.86)', this)">
-        <div class="swatch-block" style="background:rgba(35,22,16,0.86);"></div>
-        <div class="swatch-name">Hero Overlay</div>
-        <div class="swatch-hex" style="font-size:10px;">rgba(35,22,16,.86)</div>
-        <div class="swatch-use">Dark scrim over every post hero's featured image</div>
-      </div>
-    </div>
 
-    <div class="sg-section-title">Text &amp; UI</div>
-    <div class="sg-color-grid">
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Text &amp; UI</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
       <div class="color-swatch" onclick="copyColor('#2e2a26', this)">
         <div class="swatch-block" style="background:#2e2a26;"></div>
         <div class="swatch-name">Text</div>
         <div class="swatch-hex">#2e2a26</div>
-        <div class="swatch-use">Body copy, metadata values, rating descriptor</div>
+        <div class="swatch-use">Body copy, values</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#8a7f74', this)">
         <div class="swatch-block" style="background:#8a7f74;"></div>
         <div class="swatch-name">Text Muted</div>
         <div class="swatch-hex">#8a7f74</div>
-        <div class="swatch-use">Descriptions, hints, rating "Score" eyebrow</div>
+        <div class="swatch-use">Descriptions, hints</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#d8d0c4', this)">
-        <div class="swatch-block" style="background:#d8d0c4; border-bottom:1px solid #c8c0b4;"></div>
+        <div class="swatch-block" style="background:#d8d0c4; border:1px solid #c8c0b4;"></div>
         <div class="swatch-name">Border</div>
         <div class="swatch-hex">#d8d0c4</div>
-        <div class="swatch-use">Dividers, input borders, rating block rules</div>
+        <div class="swatch-use">Dividers, input borders</div>
       </div>
+
       <div class="color-swatch" onclick="copyColor('#c8b89a', this)">
-        <div class="swatch-block" style="background:#c8b89a; border-bottom:1px solid #b8a88a;"></div>
-        <div class="swatch-name">Hairline / Code</div>
+        <div class="swatch-block" style="background:#c8b89a; border:1px solid #b8a88a;"></div>
+        <div class="swatch-name">Code Text</div>
         <div class="swatch-hex">#c8b89a</div>
-        <div class="swatch-use">Section-label rule lines, metadata bar divider dots</div>
+        <div class="swatch-use">Monospace / code on dark</div>
       </div>
-    </div>
 
-    <div class="sg-note">Click any swatch to copy its hex (or rgba) code to your clipboard.</div>
-  </div>
-
-  <!-- ── TYPOGRAPHY ── -->
-  <div class="sg-panel" id="sg-type">
-    <div class="sg-section-title">Josefin Sans</div>
-    <div class="sg-specimen">
-      <div class="sg-specimen-label">Site title / nav / labels — uppercase, wide letter-spacing</div>
-      <div style="font-family:'Josefin Sans',sans-serif; font-size:22px; font-weight:400; letter-spacing:0.2em; text-transform:uppercase; color:#2e2a26;">Consuming the Tangible</div>
-      <div class="sg-specimen-meta">Weights in use: 300 (rating score), 400 (nav, tags), 600 (section labels, metadata labels)</div>
-    </div>
-    <div class="sg-comp-preview">
-      <div style="display:flex; gap:28px; flex-wrap:wrap; align-items:baseline;">
-        <span style="font-family:'Josefin Sans',sans-serif; font-weight:300; font-size:18px;">Aa 300 Light</span>
-        <span style="font-family:'Josefin Sans',sans-serif; font-weight:400; font-size:18px;">Aa 400 Regular</span>
-        <span style="font-family:'Josefin Sans',sans-serif; font-weight:600; font-size:18px;">Aa 600 Semibold</span>
-      </div>
-    </div>
-
-    <div class="sg-section-title">Fraunces <span class="sg-flag">Serif — titles &amp; italics</span></div>
-    <div class="sg-specimen">
-      <div class="sg-specimen-label">Post title, with italic album/work title inline</div>
-      <div style="font-family:'Fraunces',serif; font-size:1.8rem; color:#2e2a26; line-height:1.2;">Crown Lands: <em>Apocalypse</em> (2024)</div>
-      <div class="sg-specimen-meta">Title convention: <code>Artist: <em>Album Title</em> (Year)</code> — applied consistently back to the 2019 posts</div>
-    </div>
-    <div class="sg-comp-preview sg-live">
-      <div class="sg-specimen-label" style="margin-bottom:14px;">Drop cap (first letter of every review body)</div>
-      <p class="sg-dropcap-demo">This is how the opening paragraph of a review renders — the first letter blows up into a terracotta Fraunces capital, and the rest of the paragraph wraps around it in the body copy.</p>
-    </div>
-    <div class="sg-comp-preview sg-live">
-      <div class="sg-specimen-label" style="margin-bottom:14px;">Italic blockquote</div>
-      <blockquote>This is how a pulled quote or lyric excerpt renders in the body — italic Fraunces with a terracotta left border.</blockquote>
-    </div>
-
-    <div class="sg-section-title">DM Sans <span class="sg-flag">Body copy</span></div>
-    <div class="sg-specimen">
-      <div class="sg-specimen-label">Article body text</div>
-      <p style="font-family:'DM Sans',sans-serif; font-size:0.95rem; line-height:1.7; color:#2e2a26;">This is a stand-in for regular review-body copy — comfortable line height, no letter-spacing tricks, just readable running text at a normal weight.</p>
-      <div class="sg-specimen-meta">DM Sans isn't loaded in this toolkit (only Josefin Sans + Fraunces are), so this specimen falls back to the system sans. On the live site it renders in true DM Sans.</div>
-    </div>
-
-    <div class="sg-section-title">Outfit <span class="sg-flag">Flagged — see note</span></div>
-    <div class="sg-note" style="background:var(--bg-alt); padding:16px 20px; border-left:4px solid var(--accent); border-radius:0 4px 4px 0;">
-      Outfit is listed in earlier project notes as a fourth typeface for section labels. The July 2026 audit found section labels (e.g. "NOW PLAYING," metadata bar labels) actually rendering in <strong style="font-style:normal;">Josefin Sans</strong>, and no Outfit references turned up in the live Additional CSS. Worth a quick DOM check next time you're in Chrome to confirm whether Outfit is used anywhere on the live site, or whether that note is just stale.
     </div>
   </div>
 
-  <!-- ── SPACING ── -->
-  <div class="sg-panel" id="sg-spacing">
-    <div class="sg-section-title">Hero</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:12px;height:38px;"></div><div class="sg-scale-name">Hero min-height</div><div class="sg-scale-value">380px</div><div class="sg-scale-use">Overall hero block height</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:60px;height:12px;"></div><div class="sg-scale-name">Hero columns padding</div><div class="sg-scale-value">60px 40px</div><div class="sg-scale-use">Space around the title/art column pair</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:48px;height:12px;"></div><div class="sg-scale-name">Left column padding-left</div><div class="sg-scale-value">48px</div><div class="sg-scale-use">Breathing room before category/title/tags</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:48px;height:12px;"></div><div class="sg-scale-name">Right column padding-right</div><div class="sg-scale-value">48px</div><div class="sg-scale-use">Space before the floating art from the edge</div></div>
+  <div class="tool-card">
+    <div class="tool-card-label">Hero Overlay</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
 
-    <div class="sg-section-title">Floating Album Art</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:36px;height:36px;"></div><div class="sg-scale-name">Review art size</div><div class="sg-scale-value">300 × 300px</div><div class="sg-scale-use">Square, floats over the hero overlay</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:42px;height:28px;"></div><div class="sg-scale-name">Playlist art size</div><div class="sg-scale-value">420 × 280px</div><div class="sg-scale-use">Wider rectangle — the only override in the playlist template</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:12px;height:12px;"></div><div class="sg-scale-name">Art vertical overlap</div><div class="sg-scale-value">-40px margin</div><div class="sg-scale-use">Negative top/bottom margin — this is what makes the art "float" past the hero edge</div></div>
-
-    <div class="sg-section-title">Corners &amp; Radius</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:24px;height:24px;border-radius:2px;"></div><div class="sg-scale-name">Standard radius</div><div class="sg-scale-value">4px</div><div class="sg-scale-use">Cards, floating art, metadata bar corner</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:24px;height:24px;border-radius:10px;"></div><div class="sg-scale-name">Pill radius</div><div class="sg-scale-value">10px</div><div class="sg-scale-use">Tag pills, browse buttons, Bandcamp embeds, in-body images</div></div>
-
-    <div class="sg-section-title">Review Body</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:12px;height:12px;"></div><div class="sg-scale-name">Reading column width</div><div class="sg-scale-value">700px</div><div class="sg-scale-use">Reviews &amp; Miscellany — 800px on Playlists</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:44px;height:44px;"></div><div class="sg-scale-name">Drop cap size</div><div class="sg-scale-value">4.5rem</div><div class="sg-scale-use">Fraunces, first letter of the article body</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:4px;height:24px;"></div><div class="sg-scale-name">Blockquote border</div><div class="sg-scale-value">4px solid</div><div class="sg-scale-use">Left border, 32px margin above/below</div></div>
-
-    <div class="sg-section-title">Metadata Bar &amp; Rating Block</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:24px;height:14px;"></div><div class="sg-scale-name">Metadata bar padding</div><div class="sg-scale-value">14px 0 / gap 16px</div><div class="sg-scale-use">Outer padding and gap between Label/Released/Format/Reviewed</div></div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:24px;height:28px;"></div><div class="sg-scale-name">Rating block padding</div><div class="sg-scale-value">32px 0 / margin 48px 0 32px</div><div class="sg-scale-use">Top/bottom rules, 32px gap between score and descriptor</div></div>
-
-    <div class="sg-section-title">Default Pages (Index, Contact)</div>
-    <div class="sg-scale-row"><div class="sg-scale-swatch" style="width:24px;height:16px;"></div><div class="sg-scale-name">Page title padding</div><div class="sg-scale-value">32px 0 16px</div><div class="sg-scale-use">1.8rem, 0.2em letter-spacing, uppercase</div></div>
-  </div>
-
-  <!-- ── COMPONENTS ── -->
-  <div class="sg-panel" id="sg-components">
-    <div class="sg-section-title">Section Label with Rule</div>
-    <div class="sg-comp-preview sg-live">
-      <div class="sg-section-label-demo">Now Playing</div>
-    </div>
-    <div class="sg-comp-caption">Used for sidebar widget headings and the default-page title treatment — terracotta uppercase text with a hairline rule extending to the right.</div>
-
-    <div class="sg-section-title">Tag Pills</div>
-    <div class="sg-comp-dark-preview sg-live">
-      <span class="sg-tag-pill-demo">Reviews</span>
-      <span class="sg-tag-pill-demo">Vinyl</span>
-      <span class="sg-tag-pill-demo">Zealously Plangent</span>
-    </div>
-    <div class="sg-comp-caption">Translucent dark pills sitting over the hero image — category, tags, and (on reviews) the rating descriptor all use this same treatment.</div>
-
-    <div class="sg-section-title">Browse Widget Button</div>
-    <div class="sg-comp-preview sg-live">
-      <span class="sg-browse-btn-demo">1980s</span>
-    </div>
-    <div class="sg-comp-caption">Sidebar decade/genre filter buttons — terracotta border on a warm tan fill, flips to solid terracotta on hover.</div>
-
-    <div class="sg-section-title">Metadata Bar</div>
-    <div class="sg-comp-preview sg-live">
-      <div class="post-meta-bar">
-        <div class="post-meta-bar-inner">
-          <span class="post-meta-item"><span class="post-meta-label">Label</span><span class="post-meta-value">Relapse Records</span></span>
-          <span class="post-meta-divider">·</span>
-          <span class="post-meta-item"><span class="post-meta-label">Released</span><span class="post-meta-value">2023</span></span>
-          <span class="post-meta-divider">·</span>
-          <span class="post-meta-item"><span class="post-meta-label">Format</span><span class="post-meta-value">Vinyl</span></span>
-          <span class="post-meta-divider">·</span>
-          <span class="post-meta-item"><span class="post-meta-label">Reviewed</span><span class="post-meta-value">May 18, 2026</span></span>
-        </div>
+      <div class="color-swatch" onclick="copyColor('rgba(35,22,16,0.86)', this)">
+        <div class="swatch-block" style="background:rgba(35,22,16,0.86);"></div>
+        <div class="swatch-name">Hero Overlay</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(35,22,16,0.86)</div>
+        <div class="swatch-use">Post hero dark overlay</div>
       </div>
-    </div>
-    <div class="sg-comp-caption">Generate your own on the Metadata Bar tab — this is just a live-styled reference so you don't have to hunt down a post to check it against.</div>
 
-    <div class="sg-section-title">Rating Block</div>
-    <div class="sg-comp-preview sg-live">
-      <div class="post-rating-block">
-        <div class="post-rating-score">☯ / 0.5</div>
-        <div class="post-rating-descriptor-wrap">
-          <div class="post-rating-label">Score</div>
-          <div class="post-rating-descriptor">Obliquely Rutabagan</div>
-        </div>
-      </div>
-    </div>
-    <div class="sg-comp-caption">Generate your own on the Rating Generator tab.</div>
-  </div>
-
-  <!-- ── CSS SUMMARY ── -->
-  <div class="sg-panel" id="sg-csssummary">
-    <div class="sg-note">Plain-English breakdown of what's actually in <code>ctt-additional-css-current.css</code>, section by section, so you don't have to read raw CSS to know what does what. Click any row to expand.</div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Hero Header <span class="sg-css-header-class">.post-hero-header</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Sets the hero's minimum height and puts a dark terracotta-brown scrim (86% opacity) over the featured image so white title text stays readable regardless of the photo underneath.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Hero Columns Layout <span class="sg-css-header-class">.wp-block-columns</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Adds the padding around the two-column row inside the hero (title/tags on the left, floating art on the right) and makes sure that row sits above the dark overlay, not behind it.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Hero Left Column <span class="sg-css-header-class">.wp-block-post-title / .wp-block-post-terms</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Styles the title (white, large, heavy drop-shadow so it reads over any photo) and turns each category/tag into a translucent dark pill with light text — and hides WordPress's default "·" separator between them since the pills already look separated.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Hero Right Column <span class="sg-css-header-class">.hero-album-art-column</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Locks the floating album art to a fixed size, gives it a soft terracotta-tinted glow plus a heavier drop shadow, and pulls it up and down with negative margins so it visually "floats" past the top and bottom edge of the hero.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Category &amp; Page Header Images <span class="sg-css-header-class">body.category-*</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">One rule sets the default homepage header photo; a separate rule per category (Vinyl, CD, Cassette, Playlists, Miscellany) and per page (Contact, Index of Bands) swaps in a different background photo for that specific archive or page, each with its own position tweak.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Page Title — Default Pages <span class="sg-css-header-class">.page-template-default</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Gives plain pages like Index of Bands and Contact a small terracotta uppercase title with a hairline rule trailing off to the right — the same "section label" look used in the sidebar.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Text Shadows <span class="sg-css-header-class">header .wp-block-site-title / .wp-block-navigation</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">A subtle dark shadow behind the site title and nav links so they stay legible over the homepage's photo banner.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Sidebar H3 Headings <span class="sg-css-header-class">h3.wp-block-heading</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Turns every sidebar widget heading ("Now Playing," "Calendar," etc.) into the label-with-trailing-rule treatment, and forces them left-aligned even though some were centered by default.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Embed Styles <span class="sg-css-header-class">iframe[src*="youtube/bandcamp"]</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Adds a drop shadow to embedded YouTube/Bandcamp players (and rounds Bandcamp's corners), plus rounds and shadows regular in-body images so everything in the review body feels consistently "framed."</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Post Title Link Colors <span class="sg-css-header-class">.entry-title a</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Post titles are near-black with a terracotta hover everywhere <em>except</em> on dark backgrounds (the hero, category headers), where they flip to white with a light-terracotta hover so they stay readable.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Album Art Hover Excerpt <span class="sg-css-header-class">.wp-block-post-featured-image</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">On archive grid thumbnails, hovering the album art fades in a dark overlay with the post excerpt centered on top of it — a little sneak-peek without leaving the grid.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Sidebar Browse Widget <span class="sg-css-header-class">.browse-widget / .browse-btn</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Lays out the decade filter buttons in a 4-column grid and genre buttons in a 2-column grid, each styled as a small pill button that fills solid terracotta on hover.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Single Post — Remove Top Gap <span class="sg-css-header-class">.wp-singular .wp-site-blocks</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Zeroes out theme padding above the content on single posts so the hero sits flush at the top of the page (this is separate from the compact-header gap you're intentionally keeping).</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Post Metadata Bar <span class="sg-css-header-class">.post-meta-bar</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">The Label/Released/Format/Reviewed strip that sits below the hero on newer reviews — cream background, terracotta left border, values in charcoal, labels in small terracotta caps.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Review Body <span class="sg-css-header-class">.entry-content</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Caps the reading column at 700px, widens the gap between side-by-side columns, blows up the first letter of the opening paragraph into a terracotta Fraunces drop cap, and styles any blockquote with an italic serif treatment and terracotta left border.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Rating Block <span class="sg-css-header-class">.post-rating-block</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">The score-and-descriptor strip at the end of a review — large light-weight terracotta numeral on the left, small "Score" label and italic Fraunces descriptor on the right, framed by hairline rules above and below.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Playlist Template Overrides <span class="sg-css-header-class">body.post-template-playlists-posts</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">The only two things that change on a Playlist post: the reading column widens to 800px, and the floating hero art becomes a 420×280 rectangle instead of a 300×300 square.</div>
-    </div>
-
-    <div class="sg-css-block" onclick="toggleCssBlock(this)">
-      <div class="sg-css-header"><span class="sg-css-header-text">Header Nav — Stick to Bottom <span class="sg-css-header-class">header.wp-block-template-part</span></span><span class="sg-css-arrow">▶</span></div>
-      <div class="sg-css-body">Pins the site title/nav row to the bottom of the header block so it stays anchored there even as the header's photo banner height changes across the homepage vs. category pages.</div>
     </div>
   </div>
 
-  <!-- ── POST TYPES ── -->
-  <div class="sg-panel" id="sg-posttypes">
-    <div class="sg-note">How the three post types you write for actually differ, structurally — not just in tone.</div>
-
-    <div class="sg-posttype-card">
-      <div class="sg-posttype-hero" style="background:linear-gradient(135deg, #3a2418, #1f140d);">
-        <div>
-          <span class="sg-posttype-tag" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff;">Reviews</span>
-          <div class="sg-posttype-title">Crown Lands: <em>Apocalypse</em></div>
-        </div>
-        <div class="sg-posttype-art" style="width:90px; height:90px;"></div>
-      </div>
-      <div class="sg-posttype-body">
-        <strong>CTT Review — the full treatment.</strong> Hero with square 300×300 floating art, tag row includes the rating descriptor, metadata bar (Label/Released/Format/Reviewed) below the hero, 700px reading column, Fraunces drop cap, italic blockquote available, rating block at the end.
-        <ul>
-          <li>Metadata bar: <strong>yes</strong></li>
-          <li>Rating block: <strong>yes</strong></li>
-          <li>Reading column: <strong>700px</strong></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="sg-posttype-card">
-      <div class="sg-posttype-hero" style="background:linear-gradient(135deg, #2e2418, #191008);">
-        <div>
-          <span class="sg-posttype-tag" style="background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff;">Playlists</span>
-          <div class="sg-posttype-title">(Un)Focused Definition <em>Vol. 42</em></div>
-        </div>
-        <div class="sg-posttype-art" style="width:120px; height:80px;"></div>
-      </div>
-      <div class="sg-posttype-body">
-        <strong>CTT Playlist — streamlined.</strong> Same hero structure as a Review, but the floating art becomes a wider 420×280 rectangle (built with the Playlist Banner tool) and the reading column widens to 800px. No metadata bar, no rating block — the post is usually just the intro copy plus embedded tracks/banner.
-        <ul>
-          <li>Metadata bar: <strong>no</strong></li>
-          <li>Rating block: <strong>no</strong></li>
-          <li>Reading column: <strong>800px</strong></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="sg-posttype-card">
-      <div class="sg-posttype-hero sg-9c-hero">
-        <div>
-          <span class="sg-posttype-tag" style="background:rgba(255,255,255,0.1); border:1px solid rgba(180,220,235,0.35); color:#cfe8f2;">The 9C Files</span>
-          <div class="sg-posttype-title" style="color:#e4f2f7;">Nine Circles: <em>Contributor Review</em></div>
-        </div>
-        <div class="sg-9c-ribbon"></div>
-      </div>
-      <div class="sg-posttype-body">
-        <strong>Nine Circles — a different site entirely.</strong> This isn't a CTT template at all — it's a separate WordPress site with its own ice-blue tinted visual identity and its own generative "void engine" ribbon graphics for header art. None of CTT's hero/metadata-bar/rating-block system applies here; formatting follows 9C's house style instead.
-        <ul>
-          <li>Shares CTT's design system: <strong>no</strong></li>
-          <li>Header art: <strong>void-engine ribbon generator</strong> (Second Circle Header Creator / Ov Grid Creator)</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <div class="confirm-msg" id="color-confirm" style="text-align:center; margin-top:8px;"></div>
 </div>
 
 <script>
@@ -1392,26 +774,14 @@ function showTab(name) {
 }
 
 /* ══════════════════════════
-   STYLE GUIDE
+   COLOR PALETTE
 ══════════════════════════ */
-function showSGTab(name) {
-  document.querySelectorAll('.sg-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sg-subtab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('sg-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-
 function copyColor(hex, el) {
   navigator.clipboard.writeText(hex).then(() => {
-    const label = el.querySelector('.swatch-hex');
-    const orig = label.textContent;
-    label.textContent = 'Copied!';
-    setTimeout(() => { label.textContent = orig; }, 1500);
+    const orig = el.querySelector('.swatch-hex').textContent;
+    el.querySelector('.swatch-hex').textContent = 'Copied!';
+    setTimeout(() => { el.querySelector('.swatch-hex').textContent = orig; }, 1500);
   });
-}
-
-function toggleCssBlock(el) {
-  el.classList.toggle('open');
 }
 
 /* ══════════════════════════
@@ -1430,24 +800,71 @@ const denominators = [
   '4.20','99','0.5','∅','¿','XVI','Ↄ','33⅓','7b','XII'
 ];
 const adverbs = [
+  // original 30
   'Lugubriously','Ineffably','Magnanimously','Quixotically','Somberly',
   'Tepidly','Fervently','Obliquely','Resplendently','Morosely',
   'Stentoriously','Precariously','Biliously','Adamantly','Languidly',
   'Raucously','Supinely','Tremulously','Vexingly','Woefully',
   'Imperiously','Garrulously','Fastidiously','Dolefully','Brusquely',
-  'Corpulently','Querulously','Sanctimoniously','Timorously','Zealously'
+  'Corpulently','Querulously','Sanctimoniously','Timorously','Zealously',
+  // expansion set (60 more)
+  'Portentously','Balefully','Truculently','Torpidly','Peremptorily',
+  'Effusively','Splenetically','Obsequiously','Cantankerously','Lachrymosely',
+  'Bombastically','Petulantly','Grandiloquently','Insouciantly','Perfunctorily',
+  'Rapaciously','Mellifluously','Discordantly','Ruefully','Sepulchrally',
+  'Acrimoniously','Vaingloriously','Uxoriously','Pusillanimously','Fatuously',
+  'Ignominiously','Contumaciously','Vociferously','Peevishly','Apoplectically',
+  'Torridly','Grudgingly','Meretriciously','Sonorously','Turbidly',
+  'Querimoniously','Cacophonously','Histrionically','Waspishly','Officiously',
+  'Unremittingly','Fractiously','Solipsistically','Vindictively','Dyspeptically',
+  'Sardonically','Cynically','Feverishly','Impetuously','Preposterously',
+  'Ostentatiously','Dolorously','Fitfully','Gormlessly','Cataclysmically',
+  'Bumptiously','Fustily','Snidely','Broodingly','Voraciously'
 ];
 const adjectives = [
+  // original 30
   'Moist','Crepuscular','Tubular','Sanguine','Ponderous',
   'Oleaginous','Brackish','Verdant','Lumbering','Piquant',
   'Fungible','Nebulous','Clammy','Turgid','Fulsome',
   'Vaporous','Rutabagan','Plangent','Hirsute','Ossified',
   'Glutinous','Fecund','Rancorous','Spectral','Bilious',
-  'Crenulated','Sallow','Phlegmatic','Unctuous','Murmurous'
+  'Crenulated','Sallow','Phlegmatic','Unctuous','Murmurous',
+  // expansion set (60 more)
+  'Loamy','Briny','Gelatinous','Cavernous','Sepulchral',
+  'Chthonic','Feculent','Miasmic','Rheumy','Tumescent',
+  'Desiccated','Effulgent','Baroque','Antediluvian','Gossamer',
+  'Craggy','Loquacious','Torpid','Vestigial','Numinous',
+  'Squamous','Bituminous','Coagulated','Feral','Fetid',
+  'Larval','Mordant','Necrotic','Palimpsestic','Pendulous',
+  'Piscine','Porcine','Putrescent','Rancid','Recondite',
+  'Somnolent','Subterranean','Tectonic','Tenebrous','Thrombotic',
+  'Tremulous','Turbid','Umbral','Vermicular','Viscid',
+  'Voluptuous','Waterlogged','Xanthous','Yawning','Zygotic',
+  'Adenoidal','Blistered','Cadaverous','Doughy','Effluvial',
+  'Fungal','Gnarled','Hoary','Incandescent','Jaundiced'
 ];
 
 let rScore = null, rWords = null;
+
+// Basic random pick
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+// Pick while avoiding whatever was recently drawn from this same pool,
+// so the same word can't turn up twice (or three times) in a row.
+// Each `recent` array is mutated in place to track its own short history.
+const recentAdverbs = [];
+const recentAdjectives = [];
+const recentNumerators = [];
+const recentDenominators = [];
+
+function pickFresh(arr, recent, historySize) {
+  const choices = arr.filter(x => !recent.includes(x));
+  const pool = choices.length ? choices : arr; // safety net if pool is ever exhausted
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  recent.push(choice);
+  if (recent.length > historySize) recent.shift();
+  return choice;
+}
 
 function ratingRender() {
   const score = `${rScore.num} / ${rScore.den}`;
@@ -1466,20 +883,32 @@ function ratingRender() {
 }
 
 function ratingGenerate() {
-  rScore = { num: pick(numerators), den: pick(denominators) };
-  rWords = { adv: pick(adverbs), adj: pick(adjectives) };
+  rScore = {
+    num: pickFresh(numerators, recentNumerators, 3),
+    den: pickFresh(denominators, recentDenominators, 3)
+  };
+  rWords = {
+    adv: pickFresh(adverbs, recentAdverbs, 5),
+    adj: pickFresh(adjectives, recentAdjectives, 5)
+  };
   ratingRender();
 }
 
 function ratingNewScore() {
   if (!rScore) return ratingGenerate();
-  rScore = { num: pick(numerators), den: pick(denominators) };
+  rScore = {
+    num: pickFresh(numerators, recentNumerators, 3),
+    den: pickFresh(denominators, recentDenominators, 3)
+  };
   ratingRender();
 }
 
 function ratingNewWords() {
   if (!rWords) return ratingGenerate();
-  rWords = { adv: pick(adverbs), adj: pick(adjectives) };
+  rWords = {
+    adv: pickFresh(adverbs, recentAdverbs, 5),
+    adj: pickFresh(adjectives, recentAdjectives, 5)
+  };
   ratingRender();
 }
 
@@ -1508,7 +937,33 @@ function metaUpdate() {
   document.getElementById('prev-format').textContent = format;
   document.getElementById('prev-reviewed').textContent = reviewed;
 
-  const html = `<div class="post-meta-bar">\n  <div class="post-meta-bar-inner">\n    <span class="post-meta-item"><span class="post-meta-label">Label</span><span class="post-meta-value">${label}</span></span>\n    <span class="post-meta-divider">·</span>\n    <span class="post-meta-item"><span class="post-meta-label">Released</span><span class="post-meta-value">${released}</span></span>\n    <span class="post-meta-divider">·</span>\n    <span class="post-meta-item"><span class="post-meta-label">Format</span><span class="post-meta-value">${format}</span></span>\n    <span class="post-meta-divider">·</span>\n    <span class="post-meta-item"><span class="post-meta-label">Reviewed</span><span class="post-meta-value">${reviewed}</span></span>\n  </div>\n</div>`;
+  // Fully inline styles — no <style> block, no <link> tag.
+  // WordPress.com sanitizes both inside Custom HTML blocks, rendering them
+  // as plain text. Inline styles survive the sanitizer intact.
+  // Font: Josefin Sans (labels) and DM Sans (values) are already loaded by
+  // the Tenku theme globally, so font-family references in inline styles
+  // will resolve correctly without needing a <link> tag here.
+  //
+  // Layout: two inner groups (Label+Format, Released+Reviewed), each its
+  // own non-wrapping flex row, inside an outer flex row with
+  // justify-content:space-between. This means the two groups spread to
+  // fill the full width when everything fits on one line, and if it
+  // doesn't fit, the wrap happens cleanly between the two groups —
+  // never mid-group, never stranding a single field alone on its own line.
+  const html = `<div class="post-meta-bar" style="font-family:'Josefin Sans',sans-serif;background:#f2ece2;border-left:4px solid #b5623a;padding:12px 20px;margin:0 0 28px 0;border-radius:0 4px 4px 0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:nowrap;">
+      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Label</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${label}</span></span>
+      <span style="color:#d8d0c4;font-size:14px;">·</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Format</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${format}</span></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:nowrap;">
+      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Released</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${released}</span></span>
+      <span style="color:#d8d0c4;font-size:14px;">·</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Reviewed</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${reviewed}</span></span>
+    </div>
+  </div>
+</div>`;
 
   document.getElementById('meta-html-preview').textContent = html;
 }
