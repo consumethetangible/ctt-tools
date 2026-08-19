@@ -516,6 +516,7 @@
   <button class="tab-btn" onclick="showTab('meta')">Metadata Bar</button>
   <button class="tab-btn" onclick="showTab('banner')">Playlist Banner</button>
   <button class="tab-btn" onclick="showTab('colors')">Color Palette</button>
+  <button class="tab-btn" onclick="showTab('posttypes')">Post Types</button>
 </nav>
 
 <!-- ══════════════════════════════════════
@@ -751,15 +752,156 @@
 
       <div class="color-swatch" onclick="copyColor('rgba(35,22,16,0.86)', this)">
         <div class="swatch-block" style="background:rgba(35,22,16,0.86);"></div>
-        <div class="swatch-name">Hero Overlay</div>
+        <div class="swatch-name">Reviews</div>
         <div class="swatch-hex" style="font-size:10px;">rgba(35,22,16,0.86)</div>
-        <div class="swatch-use">Post hero dark overlay</div>
+        <div class="swatch-use">Warm brown scrim (default template)</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('rgba(28,42,39,0.74)', this)">
+        <div class="swatch-block" style="background:rgba(28,42,39,0.74);"></div>
+        <div class="swatch-name">Playlists</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(28,42,39,0.74)</div>
+        <div class="swatch-use">Dusty teal scrim</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('rgba(36,26,33,0.74)', this)">
+        <div class="swatch-block" style="background:rgba(36,26,33,0.74);"></div>
+        <div class="swatch-name">Essays</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(36,26,33,0.74)</div>
+        <div class="swatch-use">Dusty plum scrim</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Playlists — Dusty Teal</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#e3ece9', this)">
+        <div class="swatch-block" style="background:#e3ece9; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">Sidebar Tint</div>
+        <div class="swatch-hex">#e3ece9</div>
+        <div class="swatch-use">Playlist sidebar background</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#4a7a6f', this)">
+        <div class="swatch-block" style="background:#4a7a6f;"></div>
+        <div class="swatch-name">Deep Teal</div>
+        <div class="swatch-hex">#4a7a6f</div>
+        <div class="swatch-use">Sidebar headings, link hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#a8d4c8', this)">
+        <div class="swatch-block" style="background:#a8d4c8;"></div>
+        <div class="swatch-name">Teal Light</div>
+        <div class="swatch-hex">#a8d4c8</div>
+        <div class="swatch-use">Hero tag pill text, title hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#a8c4bc', this)">
+        <div class="swatch-block" style="background:#a8c4bc;"></div>
+        <div class="swatch-name">Teal Hairline</div>
+        <div class="swatch-hex">#a8c4bc</div>
+        <div class="swatch-use">Sidebar dividing rule</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Essays — Dusty Plum</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#ece3e6', this)">
+        <div class="swatch-block" style="background:#ece3e6; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">Sidebar Tint</div>
+        <div class="swatch-hex">#ece3e6</div>
+        <div class="swatch-use">Essay sidebar background</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#6b3f52', this)">
+        <div class="swatch-block" style="background:#6b3f52;"></div>
+        <div class="swatch-name">Deep Wine</div>
+        <div class="swatch-hex">#6b3f52</div>
+        <div class="swatch-use">Sidebar headings, link hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#d9b8c9', this)">
+        <div class="swatch-block" style="background:#d9b8c9;"></div>
+        <div class="swatch-name">Plum Light</div>
+        <div class="swatch-hex">#d9b8c9</div>
+        <div class="swatch-use">Hero tag pill text, title hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#c9b0bd', this)">
+        <div class="swatch-block" style="background:#c9b0bd;"></div>
+        <div class="swatch-name">Plum Hairline</div>
+        <div class="swatch-hex">#c9b0bd</div>
+        <div class="swatch-use">Sidebar dividing rule</div>
       </div>
 
     </div>
   </div>
 
   <div class="confirm-msg" id="color-confirm" style="text-align:center; margin-top:8px;"></div>
+</div>
+
+<div class="panel" id="tab-posttypes">
+  <div class="panel-title">Post Types</div>
+  <div class="panel-desc">Each post type gets its own accent color, applied via the Template dropdown in the WordPress editor. Reviews stay anchored to the homepage look; Playlists and Essays shift hue to signal "you're in a different section."</div>
+
+  <div class="tool-card" style="border-left-color:#b5623a;">
+    <div class="tool-card-label">Reviews (Default Single Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(35,22,16,0.86); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Terracotta / warm brown — the site's default identity, same family as the homepage.</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(35,22,16,0.86)</code><br>
+          Sidebar tint: <code>#f2ece2</code><br>
+          Accent: <code>#b5623a</code> · Accent Light: <code>#f0c8a0</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#4a7a6f;">
+    <div class="tool-card-label">Playlists (Playlist Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(28,42,39,0.74); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Dusty teal — the complement to terracotta, reads as "mixtape energy."</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(28,42,39,0.74)</code><br>
+          Sidebar tint: <code>#e3ece9</code><br>
+          Accent: <code>#4a7a6f</code> · Accent Light: <code>#a8d4c8</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#6b3f52;">
+    <div class="tool-card-label">Essays (Essay Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(36,26,33,0.74); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Dusty plum / wine — softer, more contemplative, for prose-heavy posts.</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(36,26,33,0.74)</code><br>
+          Sidebar tint: <code>#ece3e6</code><br>
+          Accent: <code>#6b3f52</code> · Accent Light: <code>#d9b8c9</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#c8b89a;">
+    <div class="tool-card-label">Status Note</div>
+    <div style="font-family:var(--font-serif); font-style:italic; color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+      Hero overlay and sidebar tint are confirmed live in Additional CSS for both templates. The deep accent colors (headings, link hover, hairline rule, tag pill text) shown above were proposed as a "mini-styles" system but haven't been built into Additional CSS yet — flag this if you want them implemented.
+    </div>
+  </div>
 </div>
 
 <script>
