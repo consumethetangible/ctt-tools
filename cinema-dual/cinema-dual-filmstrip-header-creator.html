@@ -30,9 +30,17 @@
             background: #1e1e24; padding: 30px; border-radius: 8px;
             margin-bottom: 30px; border: 1px solid #333;
         }
+        .mode-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .mode-btn {
+            flex: 1; padding: 10px 18px; border: 1px solid #444; border-radius: 4px;
+            background: #16161a; color: #888; font-size: 12px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+            transition: all 0.2s;
+        }
+        .mode-btn:hover { border-color: #666; color: #ccc; }
+        .mode-btn.active { background: #2a282c; border-color: #cfcbd0; color: #e8e6ea; }
         .slot-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
             margin-bottom: 20px;
         }
@@ -130,15 +138,20 @@
     <div class="subtitle">Filmstrip Header Creator — Cinema Dual</div>
 
     <div class="input-section">
+        <div class="mode-row">
+            <button class="mode-btn active" id="mode-2film" onclick="setMode(2)">2 Films</button>
+            <button class="mode-btn" id="mode-3film" onclick="setMode(3)">3 Films (Guest Episode)</button>
+        </div>
+
         <div class="upload-zone">
             <input type="file" id="bulkUpload" accept="image/*" multiple>
             <strong>Choose Files</strong>
-            <p>Select up to 3 images at once — drag between slots to reorder</p>
+            <p id="uploadHint">Select up to 3 images at once — drag between slots to reorder</p>
         </div>
 
         <div class="slot-grid" id="slotGrid"></div>
 
-        <div class="info-row">Filled: <span class="count" id="filledCount">0</span> / 3</div>
+        <div class="info-row">Filled: <span class="count" id="filledCount">0</span> / <span id="slotTotal">3</span></div>
 
         <div class="button-group">
             <button class="primary" id="generateBtn" onclick="generateHeader()" disabled>Generate Header</button>
@@ -165,8 +178,8 @@ let grainSeed = Math.floor(Math.random() * 2**32);
 let currentSeed = null;
 
 // ── SLOT STATE ─────────────────────────────────────────────────────────────────
-const SLOTS = 3;
-const SLOT_CAPTIONS = ['Poster', 'Episode Art', 'Poster'];
+let SLOTS = 3;
+let SLOT_CAPTIONS = ['Poster', 'Episode Art', 'Poster'];
 let slots = Array(SLOTS).fill(null);
 let dragSrcIdx = null;
 
@@ -174,6 +187,26 @@ ctx.fillStyle = '#000';
 ctx.fillRect(0, 0, 900, 500);
 
 function setStatus(msg) { statusEl.textContent = msg; }
+
+function setMode(filmCount) {
+    SLOTS = filmCount + 1; // films + one episode-art slot
+    SLOT_CAPTIONS = filmCount === 2
+        ? ['Poster', 'Episode Art', 'Poster']
+        : ['Poster', 'Poster', 'Episode Art', 'Poster'];
+
+    document.getElementById('mode-2film').classList.toggle('active', filmCount === 2);
+    document.getElementById('mode-3film').classList.toggle('active', filmCount === 3);
+    document.getElementById('slotGrid').style.gridTemplateColumns = `repeat(${SLOTS}, 1fr)`;
+    document.getElementById('uploadHint').textContent =
+        `Select up to ${SLOTS} images at once — drag between slots to reorder`;
+    document.getElementById('slotTotal').textContent = SLOTS;
+
+    slots = Array(SLOTS).fill(null);
+    currentSeed = null;
+    buildGrid();
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 900, 500);
+    setStatus('');
+}
 
 function makeRng(seed) {
     let s = seed >>> 0;
@@ -306,13 +339,9 @@ document.getElementById('bulkUpload').onchange = e => {
 function removeSlot(i) {
     slots[i] = null;
     buildGrid();
-    if (filledCount() === 0) {
-        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 900, 500);
-        currentSeed = null;
-        setStatus('');
-    } else if (currentSeed) {
-        render();
-    }
+    currentSeed = null;
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 900, 500);
+    setStatus('');
 }
 
 function clearAll() {
@@ -335,10 +364,11 @@ function updateCounts() {
 }
 
 // ── FILMSTRIP LAYOUT ───────────────────────────────────────────────────────────
-const STRIP_H = 42;      // height of the top/bottom sprocket bands
-const DIVIDER_W = 24;    // width of the dark bars between the 3 images
-const FRAME_MARGIN_SCALE = 0.82; // extra shrink beyond the minimal fit, so black margin shows on ALL sides, not just top/bottom or left/right
-const CORNER_RADIUS = 4; // final on-screen corner radius for each image, in pixels
+const STRIP_H = 42;       // height of the top/bottom sprocket bands
+const DIVIDER_W = 24;     // width of the dark bars between each image
+const OUTER_MARGIN = 12;  // small fixed margin around the picture area, on all sides
+const CORNER_RADIUS = 4;  // corner radius for each image cell, in pixels
+const CELL_ASPECT = 2/3;  // width:height every cell is locked to, matching standard poster proportions
 
 // Rounded-rect path, used to clip each image's corners.
 function roundRectPath(context, x, y, w, h, r) {
@@ -352,35 +382,50 @@ function roundRectPath(context, x, y, w, h, r) {
     context.closePath();
 }
 
-// Builds the 3-image strip at its natural size: every image scaled to the
-// same height (rowH), each keeping its own aspect ratio — so nothing gets
-// letterboxed or cropped *within* the row itself. Each image is clipped to
-// rounded corners at `radius`, measured in this row's own native pixels
-// (the caller is responsible for scaling that radius up beforehand if this
-// row will later be shrunk, so the final on-screen radius comes out right).
-function buildNativeRow(images, rowH, radius) {
-    const widths = images.map(im => Math.round(rowH * (im.width / im.height)));
-    const rowW = widths.reduce((a,b) => a+b, 0) + DIVIDER_W * 2;
+// Given a budget of available width and height for the whole row, finds
+// the largest cell size that (a) keeps every cell at exactly CELL_ASPECT
+// and (b) still lets all n cells plus their dividers fit within the
+// available space. Whichever dimension is the tighter constraint wins.
+function fitCellSize(n, areaW, areaH) {
+    const maxCellWByWidth = (areaW - DIVIDER_W * (n - 1)) / n;
+    const maxCellWByHeight = areaH * CELL_ASPECT;
+    const cellW = Math.min(maxCellWByWidth, maxCellWByHeight);
+    const cellH = cellW / CELL_ASPECT;
+    return { cellW, cellH };
+}
+
+// Builds the image strip with every cell the SAME size, locked to
+// CELL_ASPECT (2:3, matching standard movie posters). Each image is
+// cover-fit within its own cell — scaled UP until it fills the cell
+// completely on both axes, cropping whatever spills over. Because cells
+// now match real poster proportions closely, posters crop only a sliver;
+// a square logo still crops more, since 1:1 is genuinely a different
+// shape than 2:3 — that mismatch is real, not a bug.
+function buildRow(images, cellW, cellH, radius) {
+    const n = images.length;
+    const rowW = cellW * n + DIVIDER_W * (n - 1);
 
     const rowCanvas = document.createElement('canvas');
-    rowCanvas.width = rowW; rowCanvas.height = rowH;
+    rowCanvas.width = rowW; rowCanvas.height = cellH;
     const rctx = rowCanvas.getContext('2d');
     let x = 0;
     images.forEach((im, i) => {
-        const w = widths[i];
         rctx.save();
-        roundRectPath(rctx, x, 0, w, rowH, radius);
+        roundRectPath(rctx, x, 0, cellW, cellH, radius);
         rctx.clip();
-        rctx.drawImage(im, x, 0, w, rowH);
+        const scale = Math.max(cellW / im.width, cellH / im.height);
+        const dw = im.width * scale, dh = im.height * scale;
+        const dx = x + (cellW - dw) / 2, dy = (cellH - dh) / 2;
+        rctx.drawImage(im, dx, dy, dw, dh);
         rctx.restore();
-        x += w;
-        if (i < images.length - 1) {
+        x += cellW;
+        if (i < n - 1) {
             rctx.fillStyle = '#0a0a0c';
-            rctx.fillRect(x, 0, DIVIDER_W, rowH);
+            rctx.fillRect(x, 0, DIVIDER_W, cellH);
             x += DIVIDER_W;
         }
     });
-    return { canvas: rowCanvas, rowW, rowH };
+    return { canvas: rowCanvas, rowW, rowH: cellH };
 }
 
 function drawSprockets(rng) {
@@ -476,38 +521,24 @@ function render() {
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 900, 500);
 
-    const pictureW = 900;
     const pictureH = 500 - STRIP_H * 2;
+    const areaW = 900 - OUTER_MARGIN * 2;
+    const areaH = pictureH - OUTER_MARGIN * 2;
 
     const images = slots.map(s => s.img);
+    const { cellW, cellH } = fitCellSize(images.length, areaW, areaH);
+    const { canvas: rowCanvas, rowW, rowH } = buildRow(images, cellW, cellH, CORNER_RADIUS);
 
-    // Figure out the row's natural width first (just arithmetic, no pixels
-    // drawn yet) so we know the final scale factor ahead of time — that lets
-    // us compensate the corner radius so it comes out to CORNER_RADIUS pixels
-    // in the final image, not some smaller value after shrinking.
-    const widths = images.map(im => Math.round(pictureH * (im.width / im.height)));
-    const rowWNatural = widths.reduce((a,b) => a+b, 0) + DIVIDER_W * 2;
-    const baseScale = Math.min(pictureW / rowWNatural, 1);
-    const scale = baseScale * FRAME_MARGIN_SCALE;
-    const nativeRadius = scale > 0 ? CORNER_RADIUS / scale : CORNER_RADIUS;
-
-    const { canvas: rowCanvas, rowW, rowH } = buildNativeRow(images, pictureH, nativeRadius);
-
-    // Contain-fit the whole assembled row into the picture area, then shrink
-    // it further so black margin shows on every side, not just whichever
-    // dimension happened to be the tightest fit.
-    const dispW = rowW * scale, dispH = rowH * scale;
-    const destX = (900 - dispW) / 2;
-    const destY = STRIP_H + (pictureH - dispH) / 2;
-
-    ctx.drawImage(rowCanvas, 0, 0, rowW, rowH, destX, destY, dispW, dispH);
+    const destX = (900 - rowW) / 2;
+    const destY = STRIP_H + (pictureH - rowH) / 2;
+    ctx.drawImage(rowCanvas, 0, 0, rowW, rowH, destX, destY, rowW, rowH);
 
     drawSprockets(rng);
     drawGrain(rng);
 }
 
 function generateHeader() {
-    if (filledCount() < SLOTS) { alert('Please fill all 3 slots first'); return; }
+    if (filledCount() < SLOTS) { alert(`Please fill all ${SLOTS} slots first`); return; }
     setStatus('Building filmstrip...');
     setTimeout(() => {
         currentSeed = Math.floor(Math.random() * 2**32);
@@ -537,7 +568,7 @@ function downloadImg() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-buildGrid();
+setMode(2);
 </script>
 </body>
 </html>
