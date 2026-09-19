@@ -294,27 +294,13 @@
     background: var(--bg-alt);
     border-left: 4px solid var(--accent);
     padding: 14px 20px;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+    column-gap: 16px;
+    row-gap: 8px;
     margin-bottom: 16px;
     border-radius: 0 4px 4px 0;
-  }
-
-  .meta-preview-group {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: nowrap;
-  }
-
-  .meta-preview-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
   }
 
   .meta-preview-label {
@@ -328,11 +314,6 @@
   .meta-preview-value {
     font-size: 12px;
     color: var(--text);
-  }
-
-  .meta-divider {
-    color: var(--border);
-    font-size: 14px;
   }
 
   /* ── BANNER TOOL ── */
@@ -573,28 +554,14 @@
 
     <div class="tool-card-label">Preview</div>
     <div class="meta-preview" id="meta-preview">
-      <div class="meta-preview-group">
-        <div class="meta-preview-item">
-          <span class="meta-preview-label">Label</span>
-          <span class="meta-preview-value" id="prev-label">—</span>
-        </div>
-        <span class="meta-divider">·</span>
-        <div class="meta-preview-item">
-          <span class="meta-preview-label">Format</span>
-          <span class="meta-preview-value" id="prev-format">—</span>
-        </div>
-      </div>
-      <div class="meta-preview-group">
-        <div class="meta-preview-item">
-          <span class="meta-preview-label">Released</span>
-          <span class="meta-preview-value" id="prev-released">—</span>
-        </div>
-        <span class="meta-divider">·</span>
-        <div class="meta-preview-item">
-          <span class="meta-preview-label">Reviewed</span>
-          <span class="meta-preview-value" id="prev-reviewed">—</span>
-        </div>
-      </div>
+      <span class="meta-preview-label">Label</span>
+      <span class="meta-preview-value" id="prev-label">—</span>
+      <span class="meta-preview-label">Format</span>
+      <span class="meta-preview-value" id="prev-format">—</span>
+      <span class="meta-preview-label">Released</span>
+      <span class="meta-preview-value" id="prev-released">—</span>
+      <span class="meta-preview-label">Reviewed</span>
+      <span class="meta-preview-value" id="prev-reviewed">—</span>
     </div>
 
     <div class="html-preview-label">HTML to paste</div>
@@ -1086,24 +1053,23 @@ function metaUpdate() {
   // the Tenku theme globally, so font-family references in inline styles
   // will resolve correctly without needing a <link> tag here.
   //
-  // Layout: two inner groups (Label+Format, Released+Reviewed), each its
-  // own non-wrapping flex row, inside an outer flex row with
-  // justify-content:space-between. This means the two groups spread to
-  // fill the full width when everything fits on one line, and if it
-  // doesn't fit, the wrap happens cleanly between the two groups —
-  // never mid-group, never stranding a single field alone on its own line.
+  // Layout: a 4-column CSS grid (header/value/header/value), two rows
+  // (Label+Format, Released+Reviewed). Grid sizes each column to its
+  // widest cell across BOTH rows, so column 1 (Label/Released) and
+  // column 3 (Format/Reviewed) always line up regardless of how long
+  // the values are — unlike the old two-flex-group version, which let
+  // a long Label value push Format out of line with Reviewed once the
+  // bar wrapped to two rows on a narrower column.
   const html = `<div class="post-meta-bar" style="font-family:'Josefin Sans',sans-serif;background:#f2ece2;border-left:4px solid #b5623a;padding:12px 20px;margin:0 0 28px 0;border-radius:0 4px 4px 0;">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-    <div style="display:flex;align-items:center;gap:16px;flex-wrap:nowrap;">
-      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Label</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${label}</span></span>
-      <span style="color:#d8d0c4;font-size:14px;">·</span>
-      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Format</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${format}</span></span>
-    </div>
-    <div style="display:flex;align-items:center;gap:16px;flex-wrap:nowrap;">
-      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Released</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${released}</span></span>
-      <span style="color:#d8d0c4;font-size:14px;">·</span>
-      <span style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;"><span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Reviewed</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${reviewed}</span></span>
-    </div>
+  <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);align-items:center;column-gap:16px;row-gap:8px;">
+    <span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Label</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${label}</span>
+    <span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Format</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${format}</span>
+    <span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Released</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${released}</span>
+    <span style="font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#b5623a;">Reviewed</span>
+    <span style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#2e2a26;">${reviewed}</span>
   </div>
 </div>`;
 
