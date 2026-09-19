@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTT Rating Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ctt-toolkit-shared.css">
+<style>
+  .rating-output {
+    min-height: 80px;
+  }
+
+  .rating-score-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .rating-score {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 300;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .rating-descriptor {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .rating-empty {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-title">Consuming the <span>Tangible</span></div>
+  <div class="site-subtitle">Rating Generator</div>
+</header>
+
+<div class="panel" id="tab-rating">
+  <div class="panel-title">Rating Generator</div>
+  <div class="panel-desc">Generate an absurd, meaningless score for each review. Copy the HTML and paste it into a Custom HTML block at the end of the post, before the Jetpack share buttons.</div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Output</div>
+    <div class="rating-output" id="rating-output">
+      <div class="rating-empty">Hit Generate to produce a rating.</div>
+    </div>
+    <div class="html-preview-label" id="html-label" style="display:none">HTML to paste</div>
+    <div class="html-preview" id="html-preview" style="display:none"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="ratingGenerate()">Generate</button>
+      <button class="btn btn-secondary" onclick="ratingNewScore()">New Score</button>
+      <button class="btn btn-secondary" onclick="ratingNewWords()">New Words</button>
+      <button class="btn btn-secondary" onclick="ratingCopy()">Copy HTML</button>
+    </div>
+    <div class="confirm-msg" id="rating-confirm"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════
+   RATING GENERATOR
+══════════════════════════ */
+const numerators = [
+  '☠','☢','☣','☯','☮','♾','⚗','⚙','⚡','⚰',
+  '⚱','⛓','⛤','✇','✈','✉','✌','✍','✏','✒',
+  'Ж','Ω','§','ꙮ','ꞔ','Ꝛ','Ƕ','ℜ','℧','℩',
+  'W','Q','Δ','Ψ','Þ','Ŋ','Ħ','Ƿ','ƻ','Ʒ',
+  '✦','❧','⁂','☽','⌬','⏣','⌘','⎈','⌖','⍜',
+  '♜','♞','♝','♛','♚','♟','⚄','⚅','⚆','⚇'
+];
+const denominators = [
+  '11','13','17','19','23','∞','?','!!','VII','π',
+  '4.20','99','0.5','∅','¿','XVI','Ↄ','33⅓','7b','XII'
+];
+const adverbs = [
+  // original 30
+  'Lugubriously','Ineffably','Magnanimously','Quixotically','Somberly',
+  'Tepidly','Fervently','Obliquely','Resplendently','Morosely',
+  'Stentoriously','Precariously','Biliously','Adamantly','Languidly',
+  'Raucously','Supinely','Tremulously','Vexingly','Woefully',
+  'Imperiously','Garrulously','Fastidiously','Dolefully','Brusquely',
+  'Corpulently','Querulously','Sanctimoniously','Timorously','Zealously',
+  // expansion set (60 more)
+  'Portentously','Balefully','Truculently','Torpidly','Peremptorily',
+  'Effusively','Splenetically','Obsequiously','Cantankerously','Lachrymosely',
+  'Bombastically','Petulantly','Grandiloquently','Insouciantly','Perfunctorily',
+  'Rapaciously','Mellifluously','Discordantly','Ruefully','Sepulchrally',
+  'Acrimoniously','Vaingloriously','Uxoriously','Pusillanimously','Fatuously',
+  'Ignominiously','Contumaciously','Vociferously','Peevishly','Apoplectically',
+  'Torridly','Grudgingly','Meretriciously','Sonorously','Turbidly',
+  'Querimoniously','Cacophonously','Histrionically','Waspishly','Officiously',
+  'Unremittingly','Fractiously','Solipsistically','Vindictively','Dyspeptically',
+  'Sardonically','Cynically','Feverishly','Impetuously','Preposterously',
+  'Ostentatiously','Dolorously','Fitfully','Gormlessly','Cataclysmically',
+  'Bumptiously','Fustily','Snidely','Broodingly','Voraciously'
+];
+const adjectives = [
+  // original 30
+  'Moist','Crepuscular','Tubular','Sanguine','Ponderous',
+  'Oleaginous','Brackish','Verdant','Lumbering','Piquant',
+  'Fungible','Nebulous','Clammy','Turgid','Fulsome',
+  'Vaporous','Rutabagan','Plangent','Hirsute','Ossified',
+  'Glutinous','Fecund','Rancorous','Spectral','Bilious',
+  'Crenulated','Sallow','Phlegmatic','Unctuous','Murmurous',
+  // expansion set (60 more)
+  'Loamy','Briny','Gelatinous','Cavernous','Sepulchral',
+  'Chthonic','Feculent','Miasmic','Rheumy','Tumescent',
+  'Desiccated','Effulgent','Baroque','Antediluvian','Gossamer',
+  'Craggy','Loquacious','Torpid','Vestigial','Numinous',
+  'Squamous','Bituminous','Coagulated','Feral','Fetid',
+  'Larval','Mordant','Necrotic','Palimpsestic','Pendulous',
+  'Piscine','Porcine','Putrescent','Rancid','Recondite',
+  'Somnolent','Subterranean','Tectonic','Tenebrous','Thrombotic',
+  'Tremulous','Turbid','Umbral','Vermicular','Viscid',
+  'Voluptuous','Waterlogged','Xanthous','Yawning','Zygotic',
+  'Adenoidal','Blistered','Cadaverous','Doughy','Effluvial',
+  'Fungal','Gnarled','Hoary','Incandescent','Jaundiced'
+];
+
+let rScore = null, rWords = null;
+
+// Basic random pick
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+// Pick while avoiding whatever was recently drawn from this same pool,
+// so the same word can't turn up twice (or three times) in a row.
+// Each `recent` array is mutated in place to track its own short history.
+const recentAdverbs = [];
+const recentAdjectives = [];
+const recentNumerators = [];
+const recentDenominators = [];
+
+function pickFresh(arr, recent, historySize) {
+  const choices = arr.filter(x => !recent.includes(x));
+  const pool = choices.length ? choices : arr; // safety net if pool is ever exhausted
+  const choice = pool[Math.floor(Math.random() * pool.length)];
+  recent.push(choice);
+  if (recent.length > historySize) recent.shift();
+  return choice;
+}
+
+function ratingRender() {
+  const score = `${rScore.num} / ${rScore.den}`;
+  const descriptor = `${rWords.adv} ${rWords.adj}`;
+  const html = `<div class="post-rating-block">\n  <div class="post-rating-score">${score}</div>\n  <div class="post-rating-descriptor-wrap">\n    <div class="post-rating-label">Score</div>\n    <div class="post-rating-descriptor">${descriptor}</div>\n  </div>\n</div>`;
+
+  document.getElementById('rating-output').innerHTML = `
+    <div class="rating-score-label">Score</div>
+    <div class="rating-score">${score}</div>
+    <div class="rating-descriptor">${descriptor}</div>
+  `;
+  document.getElementById('html-label').style.display = 'block';
+  document.getElementById('html-preview').style.display = 'block';
+  document.getElementById('html-preview').textContent = html;
+  document.getElementById('rating-confirm').textContent = '';
+}
+
+function ratingGenerate() {
+  rScore = {
+    num: pickFresh(numerators, recentNumerators, 3),
+    den: pickFresh(denominators, recentDenominators, 3)
+  };
+  rWords = {
+    adv: pickFresh(adverbs, recentAdverbs, 5),
+    adj: pickFresh(adjectives, recentAdjectives, 5)
+  };
+  ratingRender();
+}
+
+function ratingNewScore() {
+  if (!rScore) return ratingGenerate();
+  rScore = {
+    num: pickFresh(numerators, recentNumerators, 3),
+    den: pickFresh(denominators, recentDenominators, 3)
+  };
+  ratingRender();
+}
+
+function ratingNewWords() {
+  if (!rWords) return ratingGenerate();
+  rWords = {
+    adv: pickFresh(adverbs, recentAdverbs, 5),
+    adj: pickFresh(adjectives, recentAdjectives, 5)
+  };
+  ratingRender();
+}
+
+function ratingCopy() {
+  if (!rScore) return;
+  const score = `${rScore.num} / ${rScore.den}`;
+  const descriptor = `${rWords.adv} ${rWords.adj}`;
+  const html = `<div class="post-rating-block">\n  <div class="post-rating-score">${score}</div>\n  <div class="post-rating-descriptor-wrap">\n    <div class="post-rating-label">Score</div>\n    <div class="post-rating-descriptor">${descriptor}</div>\n  </div>\n</div>`;
+  navigator.clipboard.writeText(html).then(() => {
+    document.getElementById('rating-confirm').textContent = 'Copied to clipboard.';
+    setTimeout(() => { document.getElementById('rating-confirm').textContent = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTT Post Types</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ctt-toolkit-shared.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-title">Consuming the <span>Tangible</span></div>
+  <div class="site-subtitle">Post Types</div>
+</header>
+
+<div class="panel" id="tab-posttypes">
+  <div class="panel-title">Post Types</div>
+  <div class="panel-desc">Each post type gets its own accent color, applied via the Template dropdown in the WordPress editor. Reviews stay anchored to the homepage look; Playlists and Essays shift hue to signal "you're in a different section."</div>
+
+  <div class="tool-card" style="border-left-color:#b5623a;">
+    <div class="tool-card-label">Reviews (Default Single Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(35,22,16,0.86); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Terracotta / warm brown — the site's default identity, same family as the homepage.</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(35,22,16,0.86)</code><br>
+          Sidebar tint: <code>#f2ece2</code><br>
+          Accent: <code>#b5623a</code> · Accent Light: <code>#f0c8a0</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#4a7a6f;">
+    <div class="tool-card-label">Playlists (Playlist Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(28,42,39,0.74); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Dusty teal — the complement to terracotta, reads as "mixtape energy."</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(28,42,39,0.74)</code><br>
+          Sidebar tint: <code>#e3ece9</code><br>
+          Accent: <code>#4a7a6f</code> · Accent Light: <code>#a8d4c8</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#6b3f52;">
+    <div class="tool-card-label">Essays (Essay Posts template)</div>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+      <div style="width:64px; height:64px; border-radius:4px; background:rgba(36,26,33,0.74); flex-shrink:0;"></div>
+      <div style="flex:1; min-width:200px;">
+        <div style="font-family:var(--font-serif); font-style:italic; color:var(--text); font-size:0.95rem; margin-bottom:8px;">Dusty plum / wine — softer, more contemplative, for prose-heavy posts.</div>
+        <div style="font-size:11px; color:var(--text-muted); line-height:1.8;">
+          Hero overlay: <code>rgba(36,26,33,0.74)</code><br>
+          Sidebar tint: <code>#ece3e6</code><br>
+          Accent: <code>#6b3f52</code> · Accent Light: <code>#d9b8c9</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tool-card" style="border-left-color:#c8b89a;">
+    <div class="tool-card-label">Status Note</div>
+    <div style="font-family:var(--font-serif); font-style:italic; color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+      Hero overlay and sidebar tint are confirmed live in Additional CSS for both templates. The deep accent colors (headings, link hover, hairline rule, tag pill text) shown above were proposed as a "mini-styles" system but haven't been built into Additional CSS yet — flag this if you want them implemented.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTT Color Palette</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ctt-toolkit-shared.css">
+<style>
+  /* ── COLOR SWATCHES ── */
+  .color-swatch {
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .color-swatch:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .swatch-block {
+    height: 64px;
+    width: 100%;
+  }
+
+  .swatch-name {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    padding: 8px 10px 2px;
+  }
+
+  .swatch-hex {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    padding: 0 10px 4px;
+  }
+
+  .swatch-use {
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 0 10px 10px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-title">Consuming the <span>Tangible</span></div>
+  <div class="site-subtitle">Color Palette</div>
+</header>
+
+<div class="panel" id="tab-colors">
+  <div class="panel-title">Color Palette</div>
+  <div class="panel-desc">The full CTT color system. Click any swatch to copy its hex code to the clipboard.</div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Primary</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#b5623a', this)">
+        <div class="swatch-block" style="background:#b5623a;"></div>
+        <div class="swatch-name">Accent</div>
+        <div class="swatch-hex">#b5623a</div>
+        <div class="swatch-use">Buttons, borders, labels</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#8a4429', this)">
+        <div class="swatch-block" style="background:#8a4429;"></div>
+        <div class="swatch-name">Accent Dark</div>
+        <div class="swatch-hex">#8a4429</div>
+        <div class="swatch-use">Hover states</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#f0c8a0', this)">
+        <div class="swatch-block" style="background:#f0c8a0; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">Accent Light</div>
+        <div class="swatch-hex">#f0c8a0</div>
+        <div class="swatch-use">Header nav active text</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Backgrounds</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#f8f4ee', this)">
+        <div class="swatch-block" style="background:#f8f4ee; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">BG Primary</div>
+        <div class="swatch-hex">#f8f4ee</div>
+        <div class="swatch-use">Main page background</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#f2ece2', this)">
+        <div class="swatch-block" style="background:#f2ece2; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">BG Alt</div>
+        <div class="swatch-hex">#f2ece2</div>
+        <div class="swatch-use">Cards, tool cards, meta bar</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#1a1410', this)">
+        <div class="swatch-block" style="background:#1a1410;"></div>
+        <div class="swatch-name">BG Dark</div>
+        <div class="swatch-hex">#1a1410</div>
+        <div class="swatch-use">Dark sections, code blocks</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#111111', this)">
+        <div class="swatch-block" style="background:#111111;"></div>
+        <div class="swatch-name">Header BG</div>
+        <div class="swatch-hex">#111111</div>
+        <div class="swatch-use">Site header, compact header</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Text &amp; UI</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#2e2a26', this)">
+        <div class="swatch-block" style="background:#2e2a26;"></div>
+        <div class="swatch-name">Text</div>
+        <div class="swatch-hex">#2e2a26</div>
+        <div class="swatch-use">Body copy, values</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#8a7f74', this)">
+        <div class="swatch-block" style="background:#8a7f74;"></div>
+        <div class="swatch-name">Text Muted</div>
+        <div class="swatch-hex">#8a7f74</div>
+        <div class="swatch-use">Descriptions, hints</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#d8d0c4', this)">
+        <div class="swatch-block" style="background:#d8d0c4; border:1px solid #c8c0b4;"></div>
+        <div class="swatch-name">Border</div>
+        <div class="swatch-hex">#d8d0c4</div>
+        <div class="swatch-use">Dividers, input borders</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#c8b89a', this)">
+        <div class="swatch-block" style="background:#c8b89a; border:1px solid #b8a88a;"></div>
+        <div class="swatch-name">Code Text</div>
+        <div class="swatch-hex">#c8b89a</div>
+        <div class="swatch-use">Monospace / code on dark</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Hero Overlay</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('rgba(35,22,16,0.86)', this)">
+        <div class="swatch-block" style="background:rgba(35,22,16,0.86);"></div>
+        <div class="swatch-name">Reviews</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(35,22,16,0.86)</div>
+        <div class="swatch-use">Warm brown scrim (default template)</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('rgba(28,42,39,0.74)', this)">
+        <div class="swatch-block" style="background:rgba(28,42,39,0.74);"></div>
+        <div class="swatch-name">Playlists</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(28,42,39,0.74)</div>
+        <div class="swatch-use">Dusty teal scrim</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('rgba(36,26,33,0.74)', this)">
+        <div class="swatch-block" style="background:rgba(36,26,33,0.74);"></div>
+        <div class="swatch-name">Essays</div>
+        <div class="swatch-hex" style="font-size:10px;">rgba(36,26,33,0.74)</div>
+        <div class="swatch-use">Dusty plum scrim</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Playlists — Dusty Teal</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#e3ece9', this)">
+        <div class="swatch-block" style="background:#e3ece9; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">Sidebar Tint</div>
+        <div class="swatch-hex">#e3ece9</div>
+        <div class="swatch-use">Playlist sidebar background</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#4a7a6f', this)">
+        <div class="swatch-block" style="background:#4a7a6f;"></div>
+        <div class="swatch-name">Deep Teal</div>
+        <div class="swatch-hex">#4a7a6f</div>
+        <div class="swatch-use">Sidebar headings, link hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#a8d4c8', this)">
+        <div class="swatch-block" style="background:#a8d4c8;"></div>
+        <div class="swatch-name">Teal Light</div>
+        <div class="swatch-hex">#a8d4c8</div>
+        <div class="swatch-use">Hero tag pill text, title hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#a8c4bc', this)">
+        <div class="swatch-block" style="background:#a8c4bc;"></div>
+        <div class="swatch-name">Teal Hairline</div>
+        <div class="swatch-hex">#a8c4bc</div>
+        <div class="swatch-use">Sidebar dividing rule</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tool-card">
+    <div class="tool-card-label">Essays — Dusty Plum</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+
+      <div class="color-swatch" onclick="copyColor('#ece3e6', this)">
+        <div class="swatch-block" style="background:#ece3e6; border:1px solid #d8d0c4;"></div>
+        <div class="swatch-name">Sidebar Tint</div>
+        <div class="swatch-hex">#ece3e6</div>
+        <div class="swatch-use">Essay sidebar background</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#6b3f52', this)">
+        <div class="swatch-block" style="background:#6b3f52;"></div>
+        <div class="swatch-name">Deep Wine</div>
+        <div class="swatch-hex">#6b3f52</div>
+        <div class="swatch-use">Sidebar headings, link hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#d9b8c9', this)">
+        <div class="swatch-block" style="background:#d9b8c9;"></div>
+        <div class="swatch-name">Plum Light</div>
+        <div class="swatch-hex">#d9b8c9</div>
+        <div class="swatch-use">Hero tag pill text, title hover</div>
+      </div>
+
+      <div class="color-swatch" onclick="copyColor('#c9b0bd', this)">
+        <div class="swatch-block" style="background:#c9b0bd;"></div>
+        <div class="swatch-name">Plum Hairline</div>
+        <div class="swatch-hex">#c9b0bd</div>
+        <div class="swatch-use">Sidebar dividing rule</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="confirm-msg" id="color-confirm" style="text-align:center; margin-top:8px;"></div>
+</div>
+
+<script>
+/* ══════════════════════════
+   COLOR PALETTE
+══════════════════════════ */
+function copyColor(hex, el) {
+  navigator.clipboard.writeText(hex).then(() => {
+    const orig = el.querySelector('.swatch-hex').textContent;
+    el.querySelector('.swatch-hex').textContent = 'Copied!';
+    setTimeout(() => { el.querySelector('.swatch-hex').textContent = orig; }, 1500);
+  });
+}
+</script>
+</body>
+</html>
