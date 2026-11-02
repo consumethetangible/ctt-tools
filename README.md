@@ -1,4 +1,6 @@
-# The Blog Toolkit
+# The P.A.I.N. Workbench
+
+*(Personal A.I. Noodling. Formerly The Blog Toolkit.)*
 
 A personal collection of browser-based tools for producing featured images, banners, and post components across three sites: **Consume the Tangible** (music reviews), **Nine Circles** (metal reviews), and **Cinema Dual** (the *Cinema Dual* film podcast, published on Below Nirvana).
 
@@ -14,6 +16,8 @@ Everything here is a static, self-contained HTML file — no build step, no serv
 ctt-tools/
 ├── index.html                              ← the hub — start here
 │
+├── logos/                                  ← logos shown on the hub (apps + sites)
+│
 ├── ctt/
 │   └── ctt-publisher-toolkit.html          ← Consume the Tangible
 │
@@ -27,6 +31,20 @@ ctt-tools/
 ```
 
 `index.html` is the front door: pick a site, its tools appear, click through to whichever one you need (each opens in a new tab). It's just a picker — it doesn't do any image processing itself.
+
+The hub has two parts:
+
+- **Apps** (top row): badges linking out to standalone apps that live in their own repos and have their own URLs. They aren't part of any one blog site.
+
+  | App | Repo | Link |
+  |---|---|---|
+  | The Wheel of Fates | `the-wheel-of-fate` | https://consumethetangible.github.io/the-wheel-of-fate/ |
+  | All-In Music Logger | `music-all-in` | https://consumethetangible.github.io/music-all-in/ |
+  | The Fret Shed | `thefretshed` | https://thefretshed.com |
+
+- **Blog tools** (below): the site picker described above.
+
+The hub follows your system's light/dark setting, and the moon button in the corner overrides it (remembered per browser).
 
 ---
 
@@ -67,7 +85,7 @@ Each site keeps its own color identity, consistent between its panel on the hub 
 | Nine Circles | Ice blue (`#107AB8` / `#4EAEE5`) | Black, extreme-metal void |
 | Cinema Dual | Monochrome silver/pewter | Black-and-white film |
 
-The hub itself (`index.html`) stays neutral — dark, serif-accented, no single site's colors — since it belongs to none of them individually. Selecting a site tints its panel with that site's palette.
+The hub itself (`index.html`) stays neutral — serif-accented, no single site's colors — since it belongs to none of them individually. It supports light and dark. Selecting a site tints its panel with that site's accent; the Apps row uses a neutral violet.
 
 ---
 
@@ -77,12 +95,18 @@ All multi-image tools (Ov Grid, Second Circle, Cinema Dual Filmstrip) use the sa
 
 ---
 
+## Adding a new app badge
+
+For a standalone app with its own URL, drop its logo in `logos/`, then copy one of the `<a class="app">` blocks in the Apps row of `index.html` and change the link, name, one-liner, tag and logo path. Use the app's own favicon or logo where it has one: square, at least 168px, rounded corners baked in or applied by the page.
+
+---
+
 ## Adding a new tool
 
 1. Decide which site it belongs to (or if it's a new site entirely).
 2. Build it as a single self-contained `.html` file, following the interaction and visual conventions above.
 3. Drop it in that site's folder (create the folder if it doesn't exist yet — GitHub's "Create new file" lets you type a full path like `new-site/tool-name.html` and it creates the folder automatically).
-4. Add a link to it in `index.html`, inside that site's `tool-panel` section.
+4. Add a link to it in `index.html`, inside that site's `.panel` section (copy an existing `<a class="tool">`).
 5. If it needs a genuinely new site color, add both the card's `.active` border color and a themed panel block (see the existing CTT/Nine Circles/Cinema Dual blocks in `index.html` for the pattern).
 
 ---
