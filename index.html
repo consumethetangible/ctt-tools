@@ -99,7 +99,7 @@
   .section-label small { font-weight: 400; letter-spacing: .02em; text-transform: none; font-size: 13px; }
 
   /* ── APPS ROW ── */
-  .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+  .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
   .app {
     position: relative; display: flex; flex-direction: column; gap: 16px;
     padding: 22px; border-radius: 20px;
@@ -177,6 +177,9 @@
   .soon { margin: 16px 0 0; text-align: center; font-size: 12.5px; color: var(--faint); }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 1000px) {
+    .apps { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 760px) {
     body { padding-top: 64px; }
     .apps, .picker { grid-template-columns: 1fr; }
@@ -229,6 +232,15 @@
           <span class="app-tag">Guitar practice</span>
           <span class="app-name">The Fret Shed</span>
           <span class="app-desc">Personal guitar practice dashboard.</span>
+        </span>
+        <span class="app-open">Open <span aria-hidden="true">&#8599;</span></span>
+      </a>
+      <a class="app" href="https://consumethetangible.github.io/plex-tmdb-lookup/" target="_blank" rel="noopener">
+        <img class="app-logo" src="logos/plex-lookup.svg" alt="" width="84" height="84">
+        <span class="app-body">
+          <span class="app-tag">Plex naming</span>
+          <span class="app-name">TMDB ID Lookup</span>
+          <span class="app-desc">Search TMDB and copy a Plex-ready name like Title (Year) {tmdb-ID}. Paste your own TMDB token once.</span>
         </span>
         <span class="app-open">Open <span aria-hidden="true">&#8599;</span></span>
       </a>

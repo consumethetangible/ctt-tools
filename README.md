@@ -41,6 +41,9 @@ The hub has two parts:
   | The Wheel of Fates | `the-wheel-of-fate` | https://consumethetangible.github.io/the-wheel-of-fate/ |
   | All-In Music Logger | `music-all-in` | https://consumethetangible.github.io/music-all-in/ |
   | The Fret Shed | `thefretshed` | https://thefretshed.com |
+  | TMDB ID Lookup | `plex-tmdb-lookup` | https://consumethetangible.github.io/plex-tmdb-lookup/ |
+
+  TMDB ID Lookup finds TMDB IDs and copies Plex-ready names (`Title (Year) {tmdb-ID}`). It asks for your own TMDB token on first use and keeps it only in that browser, so nothing secret lives in either repo.
 
 - **Blog tools** (below): the site picker described above.
 
