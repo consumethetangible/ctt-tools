@@ -1,4 +1,6 @@
-# The Blog Toolkit
+# The P.A.I.N. Workbench
+
+*(Personal A.I. Noodling. Formerly The Blog Toolkit.)*
 
 A personal collection of browser-based tools for producing featured images, banners, and post components across three sites: **Consume the Tangible** (music reviews), **Nine Circles** (metal reviews), and **Cinema Dual** (the *Cinema Dual* film podcast, published on Below Nirvana).
 
@@ -13,6 +15,8 @@ Everything here is a static, self-contained HTML file — no build step, no serv
 ```
 ctt-tools/
 ├── index.html                              ← the hub — start here
+│
+├── logos/                                  ← logos shown on the hub (apps + sites)
 │
 ├── ctt/
 │   └── ctt-publisher-toolkit.html          ← Consume the Tangible
@@ -93,7 +97,7 @@ All multi-image tools (Ov Grid, Second Circle, Cinema Dual Filmstrip) use the sa
 
 ## Adding a new app badge
 
-For a standalone app with its own URL, copy one of the `<a class="app">` blocks in the Apps row of `index.html` and change the link, name, one-liner, tag and icon.
+For a standalone app with its own URL, drop its logo in `logos/`, then copy one of the `<a class="app">` blocks in the Apps row of `index.html` and change the link, name, one-liner, tag and logo path. Use the app's own favicon or logo where it has one: square, at least 168px, rounded corners baked in or applied by the page.
 
 ---
 
