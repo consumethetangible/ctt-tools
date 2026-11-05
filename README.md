@@ -16,10 +16,16 @@ Everything here is a static, self-contained HTML file — no build step, no serv
 ctt-tools/
 ├── index.html                              ← the hub — start here
 │
-├── logos/                                  ← logos shown on the hub (apps + sites)
+├── logos/                                  ← logos shown on the hub, plus workbench-icon.png
+│                                             (the home-screen / tab icon)
 │
-├── ctt/
-│   └── ctt-publisher-toolkit.html          ← Consume the Tangible
+├── ctt/                                    ← Consume the Tangible
+│   ├── ctt-toolkit-shared.css              ← styles shared by the five pages below
+│   ├── ctt-rating-generator.html
+│   ├── ctt-metadata-bar.html
+│   ├── ctt-playlist-banner.html
+│   ├── ctt-color-palette.html
+│   └── ctt-post-types.html
 │
 ├── nine-circles/
 │   ├── void-engine.js                      ← shared generative engine
@@ -49,18 +55,21 @@ The hub has two parts:
 
 The hub follows your system's light/dark setting, and the moon button in the corner overrides it (remembered per browser).
 
+**Home-screen icon:** every page links `logos/workbench-icon.png` as both its tab icon and its `apple-touch-icon`. To pin the Workbench on an iPhone, open the hub in Safari, then Share → Add to Home Screen; it will be labeled "Workbench". The icon should be a square PNG, 180×180 or larger, with no transparency (iOS rounds the corners itself). If the file is missing, everything still works; you just get the default icon.
+
 ---
 
 ## The tools
 
-### Consume the Tangible — `ctt/ctt-publisher-toolkit.html`
-One bundled toolkit with four tabs:
+### Consume the Tangible — `ctt/`
+Five standalone pages, each linked directly from the hub (they used to be tabs in one bundled file, which was retired in favor of one page per tool). They share `ctt-toolkit-shared.css`, so keep that file next to them.
 - **Rating Generator** — a deliberately absurd, meaningless score for each review (90 adverbs × 90 adjectives, with logic to avoid repeating a word within the last few generations)
 - **Metadata Bar** — Label / Released / Format / Reviewed, output as inline-styled HTML for pasting into a Custom HTML block
 - **Playlist Banner** — turns a set of album covers into a 900×600 banner
 - **Color Palette** — click-to-copy hex codes for the site's design system
+- **Post Types** — accent colors by post template (Reviews, Playlists, Essays)
 
-This tool outputs raw HTML (not images) for the Rating Generator and Metadata Bar tabs, because **WordPress.com strips `<style>` tags and JavaScript from Custom HTML blocks** — every style has to be inline on the element itself, or it gets silently sanitized away. Keep that in mind if this tool is ever extended.
+The Rating Generator and Metadata Bar output raw HTML (not images), because **WordPress.com strips `<style>` tags and JavaScript from Custom HTML blocks** — every style has to be inline on the element itself, or it gets silently sanitized away. Keep that in mind if these tools are ever extended.
 
 ### Nine Circles — `nine-circles/`
 Two banner generators sharing one engine:
@@ -69,7 +78,7 @@ Two banner generators sharing one engine:
 
 Both load `void-engine.js` from the same folder via `<script src="void-engine.js">` — **that relative path means the three files must always stay together in the same directory.** If the engine file goes missing or moves, both tools fail silently (no tendrils, no error message).
 
-The "void" is generative smoke/tendril artwork built from scratch in canvas: each tendril is a continuously tapering, curling ribbon (not a chain of stamped circles), with a noise-based grain pass and soft blur applied at the end for a photographic, non-digital feel. Tunable parameters (tendril density, length, thickness, branching, wispiness, opacity, blur) are hardcoded to tuned defaults in the two production tools; `void-engine-lab.html` (not part of the deployed hub) is the scratch tool used to dial those values in visually before baking them in.
+The "void" is generative smoke/tendril artwork built from scratch in canvas: each tendril is a continuously tapering, curling ribbon (not a chain of stamped circles), with a noise-based grain pass and soft blur applied at the end for a photographic, non-digital feel. Tunable parameters (tendril density, length, thickness, branching, wispiness, opacity, blur) are hardcoded to tuned defaults in the two production tools. A scratch "lab" page was used to dial those values in visually before baking them in; it is not kept in this repo.
 
 ### Cinema Dual — `cinema-dual/`
 - **Filmstrip Header Creator** — two movie posters and one piece of episode art, scaled to a shared height (so nothing gets cropped or squished), assembled into one strip, then fit inside a black 35mm-filmstrip frame with sprocket holes, film grain, and rounded corners. Outputs a fixed 900×500px image.
@@ -107,7 +116,7 @@ For a standalone app with its own URL, drop its logo in `logos/`, then copy one 
 ## Adding a new tool
 
 1. Decide which site it belongs to (or if it's a new site entirely).
-2. Build it as a single self-contained `.html` file, following the interaction and visual conventions above.
+2. Build it as a single self-contained `.html` file, following the interaction and visual conventions above. Add the two icon `<link>` tags (`rel="icon"` and `rel="apple-touch-icon"`, pointing at `../logos/workbench-icon.png`) right after the viewport meta, as the existing pages do.
 3. Drop it in that site's folder (create the folder if it doesn't exist yet — GitHub's "Create new file" lets you type a full path like `new-site/tool-name.html` and it creates the folder automatically).
 4. Add a link to it in `index.html`, inside that site's `.panel` section (copy an existing `<a class="tool">`).
 5. If it needs a genuinely new site color, add both the card's `.active` border color and a themed panel block (see the existing CTT/Nine Circles/Cinema Dual blocks in `index.html` for the pattern).
@@ -116,6 +125,6 @@ For a standalone app with its own URL, drop its logo in `logos/`, then copy one 
 
 ## Known limitations
 
-- Cinema Dual's filmstrip output is a fixed 900×500px; the two poster images and the episode art are scaled to a shared height and may leave black margin on the sides or top/bottom depending on their aspect ratios — this is intentional (see `FRAME_MARGIN_SCALE` in that file), not a bug.
+- Cinema Dual's filmstrip output is a fixed 900×500px; the two poster images and the episode art are scaled to a shared height and may leave black margin on the sides or top/bottom depending on their aspect ratios — this is intentional (the picture area keeps a fixed `OUTER_MARGIN` of 12px, set in that file), not a bug.
 - None of these tools validate image content — uploading something that isn't roughly the expected shape (e.g., a landscape photo where a portrait poster is expected) will still render, just not necessarily look great.
 - Everything runs entirely in the browser; there's no server-side processing, no image storage, and no analytics.
