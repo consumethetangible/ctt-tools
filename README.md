@@ -1,6 +1,6 @@
-# The P.A.I.N. Workbench
+# The Workbench
 
-*(Personal A.I. Noodling. Formerly The Blog Toolkit.)*
+*AI Noodling and Tool HQ. Formerly The Blog Toolkit.*
 
 A personal collection of browser-based tools for producing featured images, banners, and post components across three sites: **Consume the Tangible** (music reviews), **Nine Circles** (metal reviews), and **Cinema Dual** (the *Cinema Dual* film podcast, published on Below Nirvana).
 
